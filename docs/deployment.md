@@ -27,7 +27,7 @@
 
 3. **访问你的网站**:
    - GitHub Pages 会在几分钟内构建完成
-   - 访问 `https://your-username.github.io/EAR`
+   - 访问 `https://codertesla.github.io/EAR`
 
 ### 方法二：通过 GitHub Actions
 
@@ -236,7 +236,7 @@ docker-compose up -d
 你可以直接通过 CDN 访问 GitHub 上的文件：
 
 ```
-https://cdn.jsdelivr.net/gh/your-username/EAR@main/index.html
+https://cdn.jsdelivr.net/gh/codertesla/EAR@main/index.html
 ```
 
 ### 自定义域名
@@ -245,7 +245,7 @@ https://cdn.jsdelivr.net/gh/your-username/EAR@main/index.html
 
 1. **GitHub Pages 自定义域名**:
    - 在仓库设置中添加自定义域名
-   - 配置 DNS CNAME 记录指向 `your-username.github.io`
+   - 配置 DNS CNAME 记录指向 `codertesla.github.io`
 
 2. **Vercel 自定义域名**:
    - 在项目设置中添加域名
@@ -298,10 +298,10 @@ https://cdn.jsdelivr.net/gh/your-username/EAR@main/index.html
 
 如果遇到部署问题：
 
-1. 查看项目的 [Issues](https://github.com/your-username/EAR/issues)
+1. 查看项目的 [Issues](https://github.com/codertesla/EAR/issues)
 2. 查阅各平台的官方文档
 3. 提交新的 Issue 描述问题
 
 ---
 
-*最后更新: 2024-12-29* 
+*最后更新: 2025-07-07* 

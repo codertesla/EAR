@@ -1,8 +1,8 @@
 # 💳 信用卡分期真实利率计算器 (Credit Card Installment Rate Calculator)
 
-[![GitHub License](https://img.shields.io/github/license/your-username/EAR)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/your-username/EAR)](https://github.com/your-username/EAR/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/your-username/EAR)](https://github.com/your-username/EAR/network)
+[![GitHub License](https://img.shields.io/github/license/codertesla/EAR)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/codertesla/EAR)](https://github.com/codertesla/EAR/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/codertesla/EAR)](https://github.com/codertesla/EAR/network)
 
 一个现代化的信用卡分期真实年化利率(EAR)计算器，帮助用户了解信用卡分期背后的真实成本。
 
@@ -18,7 +18,7 @@
 
 ## 🚀 在线体验
 
-访问 [GitHub Pages 演示](https://your-username.github.io/EAR) 体验完整功能。
+访问 [GitHub Pages 演示](https://codertesla.github.io/EAR) 体验完整功能。
 
 ## 📸 界面预览
 
@@ -85,7 +85,7 @@ const EAR = Math.pow(1 + monthlyIRR, 12) - 1;
 
 1. **克隆项目**:
 ```bash
-git clone https://github.com/your-username/EAR.git
+git clone https://github.com/codertesla/EAR.git
 cd EAR
 ```
 
@@ -110,7 +110,7 @@ npx http-server
    - 进入仓库设置
    - 找到 Pages 选项
    - 选择 `main` 分支作为源
-3. **访问在线版本**: `https://your-username.github.io/EAR`
+3. **访问在线版本**: `https://codertesla.github.io/EAR`
 
 ## 💡 使用场景
 
@@ -177,7 +177,7 @@ function calculateIRR(cashFlows, maxIterations = 1000, tolerance = 1e-7) {
 ### 问题反馈
 
 发现 Bug 或有功能建议？请：
-- 查看 [Issues](https://github.com/your-username/EAR/issues) 是否已存在相关问题
+- 查看 [Issues](https://github.com/codertesla/EAR/issues) 是否已存在相关问题
 - 创建新的 Issue 并详细描述问题或建议
 - 使用相应的标签标记 Issue 类型
 
@@ -194,13 +194,13 @@ function calculateIRR(cashFlows, maxIterations = 1000, tolerance = 1e-7) {
 
 ## 📞 联系方式
 
-- **作者**: [Your Name]
+- **作者**: [Coder Tesla]
 - **邮箱**: your.email@example.com
-- **项目主页**: https://github.com/your-username/EAR
-- **问题反馈**: https://github.com/your-username/EAR/issues
+- **项目主页**: https://github.com/codertesla/EAR
+- **问题反馈**: https://github.com/codertesla/EAR/issues
 
 ---
 
 ⭐ 如果这个项目对你有帮助，请给个 Star 支持一下！
 
-Made with ❤️ by [Your Name] 
+Made with ❤️ by [Coder Tesla] 
