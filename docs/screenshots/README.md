@@ -5,7 +5,7 @@
 ## 📋 截图规范
 
 ### 文件命名规范
-- `main-interface.png` - 主界面截图
+- `main-interface.avif` - 主界面截图
 - `mobile-view.png` - 移动端界面
 - `calculation-result.png` - 计算结果展示
 - `chart-analysis.png` - 图表分析界面
@@ -19,7 +19,7 @@
 
 ## 🎯 建议截图内容
 
-### 1. 主界面截图 (`main-interface.png`)
+### 1. 主界面截图 (`main-interface.avif`)
 - 完整的计算器界面
 - 显示默认数据的计算结果
 - 展现玻璃态设计效果
@@ -113,7 +113,7 @@
 在 README.md 中引用截图：
 
 ```markdown
-![主界面](docs/screenshots/main-interface.png)
+![主界面](docs/screenshots/main-interface.avif)
 ![移动端界面](docs/screenshots/mobile-view.png)
 ```
 
