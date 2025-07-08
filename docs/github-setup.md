@@ -64,8 +64,8 @@ gh repo create EAR --public --description "💳 信用卡分期真实年化利�
 ### 添加远程仓库
 
 ```bash
-# 添加远程仓库 (替换 your-username 为你的 GitHub 用户名)
-git remote add origin https://github.com/your-username/EAR.git
+# 添加远程仓库 (替换 codertesla 为你的 GitHub 用户名)
+git remote add origin https://github.com/codertesla/EAR.git
 
 # 验证远程仓库
 git remote -v
@@ -113,7 +113,7 @@ git push -u origin main
 
 3. **等待部署完成**
    - 通常需要几分钟时间
-   - 完成后可通过 `https://your-username.github.io/EAR` 访问
+   - 完成后可通过 `https://codertesla.github.io/EAR` 访问
 
 ### 3. 安全设置
 
@@ -155,7 +155,7 @@ Protect matching branches:
    - 纯前端实现，易于部署
    
    ## 📦 部署方式
-   - [GitHub Pages 演示](https://your-username.github.io/EAR)
+   - [GitHub Pages 演示](https://ear-calculator.pages.dev/)
    - 支持 Vercel、Netlify 等平台一键部署
    
    ## 🔗 相关链接
@@ -212,7 +212,7 @@ glassmorphism, 响应式设计, 纯前端
 ```
 💳 信用卡分期真实年化利率(EAR)计算器 - 看清"免息"背后的真实成本
 
-🔗 Website: https://your-username.github.io/EAR
+🔗 Website: https://codertesla.github.io/EAR
 🏷️ Topics: 信用卡, 利率计算器, 金融工具, javascript
 ```
 
@@ -221,10 +221,10 @@ glassmorphism, 响应式设计, 纯前端
 更新 README.md 中的徽章链接：
 
 ```markdown
-[![GitHub License](https://img.shields.io/github/license/your-username/EAR)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/your-username/EAR)](https://github.com/your-username/EAR/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/your-username/EAR)](https://github.com/your-username/EAR/network)
-[![GitHub Pages](https://img.shields.io/badge/demo-online-green.svg)](https://your-username.github.io/EAR)
+[![GitHub License](https://img.shields.io/github/license/codertesla/EAR)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/codertesla/EAR)](https://github.com/codertesla/EAR/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/codertesla/EAR)](https://github.com/codertesla/EAR/network)
+[![GitHub Pages](https://img.shields.io/badge/demo-online-green.svg)](https://codertesla.github.io/EAR)
 ```
 
 ## 🎯 项目推广建议
@@ -303,5 +303,5 @@ git push origin main
 - 🤝 欢迎社区贡献
 - 📈 持续完善项目功能
 
-*项目地址*: `https://github.com/your-username/EAR`  
-*在线演示*: `https://your-username.github.io/EAR` 
+*项目地址*: `https://github.com/codertesla/EAR`  
+*在线演示*: `https://ear-calculator.pages.dev/` 

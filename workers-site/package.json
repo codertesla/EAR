@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "name": "ear-calculator-worker",
+    "version": "1.0.0",
+    "description": "信用卡分期真实利率计算器 - Cloudflare Workers",
+    "main": "index.js",
+    "author": "Coder Tesla",
+    "license": "MIT"
+}

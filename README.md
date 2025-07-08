@@ -18,7 +18,7 @@
 
 ## 🚀 在线体验
 
-访问 [GitHub Pages 演示](https://codertesla.github.io/EAR) 体验完整功能。
+访问 [CloudFlare Pages 演示](https://ear-calculator.pages.dev/) 体验完整功能。
 
 ## 📸 界面预览
 
