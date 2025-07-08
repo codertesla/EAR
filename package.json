@@ -1,0 +1,37 @@
+{
+    "name": "ear-calculator",
+    "version": "1.0.0",
+    "description": "💳 信用卡分期真实年化利率(EAR)计算器 - 看清\"免息\"背后的真实成本",
+    "main": "src/index.js",
+    "scripts": {
+        "dev": "wrangler dev",
+        "deploy": "wrangler deploy",
+        "preview": "wrangler preview",
+        "build": "npm run copy-assets",
+        "copy-assets": "cp index.html dist/ && mkdir -p dist/docs && cp -r docs dist/",
+        "prepare": "npm run build"
+    },
+    "keywords": [
+        "信用卡",
+        "利率计算器",
+        "EAR",
+        "IRR",
+        "金融工具",
+        "javascript",
+        "cloudflare-workers"
+    ],
+    "author": "Coder Tesla",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/codertesla/EAR.git"
+    },
+    "homepage": "https://github.com/codertesla/EAR",
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20241127.0",
+        "wrangler": "^3.78.12"
+    },
+    "dependencies": {
+        "@cloudflare/kv-asset-handler": "^0.3.4"
+    }
+}

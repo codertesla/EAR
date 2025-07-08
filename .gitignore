@@ -37,6 +37,10 @@ coverage/
 node_modules/
 jspm_packages/
 
+# Cloudflare Workers
+.wrangler/
+wrangler.toml.backup
+
 # Optional npm cache directory
 .npm
 
