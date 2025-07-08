@@ -22,7 +22,7 @@
 
 ## 📸 界面预览
 
-![主界面](docs/screenshots/main-interface.png)
+![主界面](docs/screenshots/main-interface.avif)
 
 *现代化的玻璃态设计风格*
 
