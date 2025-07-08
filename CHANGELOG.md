@@ -11,7 +11,7 @@
 - [ ] 添加多语言支持
 - [ ] 移动端原生应用
 
-## [1.0.0] - 2024-12-29
+## [1.0.0] - 2025-07-07
 
 ### 新增功能
 - ✨ 基于IRR算法的真实年化利率计算
@@ -64,4 +64,4 @@
 
 ---
 
-*更多历史版本信息请查看 [GitHub Releases](https://github.com/your-username/EAR/releases)* 
+*更多历史版本信息请查看 [GitHub Releases](https://github.com/codertesla/EAR/releases)* 
