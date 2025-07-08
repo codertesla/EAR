@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>信用卡分期真实年化利率 (EAR) 计算器</title>
+        <!-- 引入 Tailwind CSS for styling -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- 引入 Chart.js for data visualization -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet">
+
+        <style>
+            body {
+                font-family: 'Inter', 'Noto Sans SC', sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+            }
+
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.25);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+
+            .card-shadow {
+                box-shadow:
+                    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                    0 0 0 1px rgba(255, 255, 255, 0.05);
+            }
+
+            .input-focus {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .input-focus:focus {
+                transform: translateY(-2px);
+                box-shadow:
+                    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+
+            .chart-container {
+                position: relative;
+                margin: auto;
+                height: 300px;
+                width: 100%;
+            }
+
+            .animate-fade-in {
+                animation: fadeIn 0.8s ease-out forwards;
+            }
+
+            .animate-slide-up {
+                animation: slideUp 0.6s ease-out forwards;
+            }
+
+            .animate-bounce-in {
+                animation: bounceIn 0.8s ease-out forwards;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes bounceIn {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.3);
+                }
+
+                50% {
+                    opacity: 1;
+                    transform: scale(1.05);
+                }
+
+                70% {
+                    transform: scale(0.9);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .gradient-border {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                padding: 2px;
+                border-radius: 16px;
+            }
+
+            .gradient-border-content {
+                background: white;
+                border-radius: 14px;
+            }
+
+            .number-display {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 800;
+            }
+
+            .danger-number {
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 800;
+            }
+
+            .success-number {
+                background: linear-gradient(135deg, #10b981, #059669);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 800;
+            }
+
+            .floating-animation {
+                animation: floating 3s ease-in-out infinite;
+            }
+
+            @keyframes floating {
+
+                0%,
+                100% {
+                    transform: translateY(0px);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            .pulse-glow {
+                animation: pulseGlow 2s ease-in-out infinite;
+            }
+
+            @keyframes pulseGlow {
+
+                0%,
+                100% {
+                    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+                }
+
+                50% {
+                    box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+                }
+            }
+
+            .hidden-initial {
+                opacity: 0;
+                transform: translateY(40px);
+                transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .hover-lift {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .hover-lift:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 20px 25px -5px rgba(102, 126, 234, 0.4);
+            }
+
+            .stats-card {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .stats-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            .stats-card:hover::before {
+                left: 100%;
+            }
+        </style>
+    </head>
+
+    <body class="text-gray-800">
+        <!-- 背景装饰 -->
+        <div class="fixed inset-0 overflow-hidden pointer-events-none">
+            <div
+                class="absolute top-1/4 left-1/4 w-96 h-96 bg-white bg-opacity-10 rounded-full blur-3xl floating-animation">
+            </div>
+            <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-white bg-opacity-5 rounded-full blur-3xl floating-animation"
+                style="animation-delay: 1s;"></div>
+        </div>
+
+        <div class="container mx-auto p-4 sm:p-6 md:p-8 relative z-10">
+            <!-- 改进的头部 -->
+            <header class="text-center mb-12 animate-fade-in">
+                <div class="inline-block p-8 glass-effect rounded-3xl mb-6">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
+                        信用卡分期真实利率计算器
+                    </h1>
+                    <p class="text-xl text-white text-opacity-90 font-medium">
+                        看清"免息"背后的真实成本
+                    </p>
+                    <div class="mt-6 flex justify-center">
+                        <div class="h-1 w-24 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <!-- 左侧：输入表单 -->
+                <div class="lg:col-span-2 animate-slide-up">
+                    <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift">
+                        <h2 class="text-2xl font-bold mb-8 flex items-center text-gray-800">
+                            <div class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mr-4 shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l12.232-12.232z" />
+                                </svg>
+                            </div>
+                            <span>计算参数</span>
+                        </h2>
+
+                        <form id="calculator-form" class="space-y-7">
+                            <div class="space-y-2">
+                                <label for="principal" class="block text-sm font-semibold text-gray-700">分期总金额</label>
+                                <div class="relative">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 pl-4 flex items-center">
+                                        <span class="text-gray-500 text-lg font-medium">¥</span>
+                                    </div>
+                                    <input type="number" id="principal" value="12000" step="0.01"
+                                        class="input-focus block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
+                                        placeholder="例如: 12000">
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="periods" class="block text-sm font-semibold text-gray-700">分期期数</label>
+                                <input type="number" id="periods" value="12"
+                                    class="input-focus block w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
+                                    placeholder="例如: 12">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="fee" class="block text-sm font-semibold text-gray-700">每期手续费/利息</label>
+                                <input type="number" id="fee" value="72" step="0.01"
+                                    class="input-focus block w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
+                                    placeholder="例如: 72">
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="submit" id="submit-button"
+                                    class="w-full btn-primary text-white font-bold py-5 px-6 rounded-2xl shadow-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 text-lg relative overflow-hidden">
+                                    <span id="button-text" class="relative z-10">立即计算</span>
+                                    <div id="button-loader"
+                                        class="absolute inset-0 flex items-center justify-center hidden">
+                                        <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                        <span class="ml-2">计算中...</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 右侧：结果展示 -->
+                <div id="results-section" class="lg:col-span-3 hidden-initial">
+                    <!-- 利率对比 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div
+                            class="stats-card bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift text-center">
+                            <div class="flex justify-center mb-4">
+                                <div class="p-4 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">名义年利率</h3>
+                            <p id="nominal-rate-result" class="text-5xl font-extrabold number-display my-4">7.20%</p>
+                            <p class="text-sm text-gray-500 font-medium">银行常用宣传口径</p>
+                        </div>
+
+                        <div
+                            class="stats-card bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift text-center pulse-glow border-2 border-red-200">
+                            <div class="flex justify-center mb-4">
+                                <div class="p-4 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">真实年化利率 (EAR)</h3>
+                            <p id="ear-result" class="text-5xl font-extrabold danger-number my-4">13.84%</p>
+                            <p class="text-sm text-gray-500 font-medium">资金的真实年化成本</p>
+                        </div>
+                    </div>
+
+                    <!-- 财务总览 -->
+                    <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift mb-8">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">财务总览</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div
+                                class="text-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200">
+                                <div class="flex justify-center mb-3">
+                                    <div class="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 font-semibold mb-2">贷款本金</p>
+                                <p id="total-principal" class="text-2xl font-bold success-number">¥12,000.00</p>
+                            </div>
+
+                            <div
+                                class="text-center p-6 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl border border-orange-200">
+                                <div class="flex justify-center mb-3">
+                                    <div class="p-3 bg-gradient-to-br from-orange-500 to-yellow-600 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 font-semibold mb-2">总支付费用</p>
+                                <p id="total-fees" class="text-2xl font-bold text-orange-600">¥864.00</p>
+                            </div>
+
+                            <div
+                                class="text-center p-6 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl border border-purple-200">
+                                <div class="flex justify-center mb-3">
+                                    <div class="p-3 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 font-semibold mb-2">还款总额</p>
+                                <p id="total-payment" class="text-2xl font-bold number-display">¥12,864.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 还款明细与图表 -->
+                    <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift">
+                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-6 text-gray-800">还款明细表</h3>
+                                <div
+                                    class="overflow-auto rounded-2xl border-2 border-gray-100 max-h-96 bg-gradient-to-br from-gray-50 to-white">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead
+                                            class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white sticky top-0">
+                                            <tr>
+                                                <th
+                                                    class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                    期数</th>
+                                                <th
+                                                    class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                    期初余额</th>
+                                                <th
+                                                    class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                    还款本金</th>
+                                                <th
+                                                    class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                    支付费用</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="amortization-table" class="bg-white divide-y divide-gray-100">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-2xl font-bold mb-6 text-gray-800">资金成本分析</h3>
+                                <div
+                                    class="chart-container bg-gradient-to-br from-gray-50 to-white rounded-2xl p-4 border-2 border-gray-100">
+                                    <canvas id="cost-analysis-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // DOM Elements
+                const form = document.getElementById('calculator-form');
+                const resultsSection = document.getElementById('results-section');
+                const earResultEl = document.getElementById('ear-result');
+                const nominalRateResultEl = document.getElementById('nominal-rate-result');
+                const totalPrincipalEl = document.getElementById('total-principal');
+                const totalFeesEl = document.getElementById('total-fees');
+                const totalPaymentEl = document.getElementById('total-payment');
+                const amortizationTableBody = document.getElementById('amortization-table');
+                const submitButton = document.getElementById('submit-button');
+                const buttonText = document.getElementById('button-text');
+                const buttonLoader = document.getElementById('button-loader');
+
+                // Chart instances
+                let costAnalysisChart = null;
+
+                // Currency Formatter
+                const currencyFormatter = new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' });
+
+                // 添加输入验证和实时反馈
+                const inputs = ['principal', 'periods', 'fee'];
+                inputs.forEach(id => {
+                    const input = document.getElementById(id);
+                    input.addEventListener('input', () => {
+                        validateInput(input);
+                    });
+                    input.addEventListener('blur', () => {
+                        validateInput(input);
+                    });
+                });
+
+                function validateInput(input) {
+                    const value = parseFloat(input.value);
+                    const isValid = !isNaN(value) && value > 0;
+
+                    if (isValid) {
+                        input.classList.remove('border-red-300', 'bg-red-50');
+                        input.classList.add('border-green-300', 'bg-green-50');
+                    } else if (input.value !== '') {
+                        input.classList.remove('border-green-300', 'bg-green-50');
+                        input.classList.add('border-red-300', 'bg-red-50');
+                    } else {
+                        input.classList.remove('border-red-300', 'bg-red-50', 'border-green-300', 'bg-green-50');
+                    }
+                }
+
+                // NPV Calculation
+                function calculateNPV(rate, cashFlows) {
+                    return cashFlows.reduce((acc, val, i) => acc + val / Math.pow(1 + rate, i), 0);
+                }
+
+                // IRR Calculation using Bisection Method
+                function calculateIRR(cashFlows, maxIterations = 1000, tolerance = 1e-7) {
+                    let lowerBound = -0.99, upperBound = 1.0;
+
+                    if (calculateNPV(lowerBound, cashFlows) * calculateNPV(upperBound, cashFlows) > 0) {
+                        return NaN;
+                    }
+
+                    for (let i = 0; i < maxIterations; i++) {
+                        let guess = (lowerBound + upperBound) / 2;
+                        let npv = calculateNPV(guess, cashFlows);
+
+                        if (Math.abs(npv) < tolerance) return guess;
+
+                        if (calculateNPV(lowerBound, cashFlows) * npv < 0) {
+                            upperBound = guess;
+                        } else {
+                            lowerBound = guess;
+                        }
+                    }
+                    return NaN;
+                }
+
+                // Form Submission Handler
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    // 按钮动画效果
+                    buttonText.classList.add('hidden');
+                    buttonLoader.classList.remove('hidden');
+                    submitButton.disabled = true;
+                    submitButton.classList.add('scale-95');
+
+                    setTimeout(() => {
+                        performCalculation();
+                        buttonText.classList.remove('hidden');
+                        buttonLoader.classList.add('hidden');
+                        submitButton.disabled = false;
+                        submitButton.classList.remove('scale-95');
+                    }, 1200);
+                });
+
+                function performCalculation() {
+                    const principal = parseFloat(document.getElementById('principal').value);
+                    const periods = parseInt(document.getElementById('periods').value);
+                    const feePerPeriod = parseFloat(document.getElementById('fee').value);
+
+                    if (isNaN(principal) || principal <= 0 || isNaN(periods) || periods <= 0 || isNaN(feePerPeriod) || feePerPeriod < 0) {
+                        return;
+                    }
+
+                    const principalPerPeriod = principal / periods;
+                    const monthlyPayment = principalPerPeriod + feePerPeriod;
+                    const totalFees = feePerPeriod * periods;
+                    const totalPayment = principal + totalFees;
+
+                    const cashFlows = [principal, ...Array(periods).fill(-monthlyPayment)];
+
+                    const monthlyIRR = calculateIRR(cashFlows);
+                    const ear = isNaN(monthlyIRR) ? 0 : Math.pow(1 + monthlyIRR, 12) - 1;
+                    const nominalRate = totalFees / principal;
+
+                    // 数字动画效果
+                    animateNumber(earResultEl, 0, ear * 100, '%', 1000);
+                    animateNumber(nominalRateResultEl, 0, nominalRate * 100, '%', 800);
+                    animateCurrency(totalPrincipalEl, 0, principal, 600);
+                    animateCurrency(totalFeesEl, 0, totalFees, 700);
+                    animateCurrency(totalPaymentEl, 0, totalPayment, 900);
+
+                    // Prepare data for table and chart
+                    const tableData = populateTableAndGetData(principal, principalPerPeriod, feePerPeriod, periods);
+
+                    // Draw new chart with animation
+                    setTimeout(() => {
+                        drawCostAnalysisChart(tableData.labels, tableData.remainingData, tableData.effectiveRateData);
+                    }, 500);
+
+                    // Show results with staggered animation
+                    resultsSection.classList.add('show');
+                }
+
+                function animateNumber(element, start, end, suffix = '', duration = 1000) {
+                    const startTime = performance.now();
+
+                    function update(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+
+                        // 使用easeOutCubic缓动函数
+                        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                        const current = start + (end - start) * easeOutCubic;
+
+                        element.textContent = current.toFixed(2) + suffix;
+
+                        if (progress < 1) {
+                            requestAnimationFrame(update);
+                        }
+                    }
+
+                    requestAnimationFrame(update);
+                }
+
+                function animateCurrency(element, start, end, duration = 1000) {
+                    const startTime = performance.now();
+
+                    function update(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+
+                        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                        const current = start + (end - start) * easeOutCubic;
+
+                        element.textContent = currencyFormatter.format(current);
+
+                        if (progress < 1) {
+                            requestAnimationFrame(update);
+                        }
+                    }
+
+                    requestAnimationFrame(update);
+                }
+
+                function populateTableAndGetData(principal, principalPerPeriod, feePerPeriod, periods) {
+                    amortizationTableBody.innerHTML = '';
+                    let remainingPrincipal = principal;
+
+                    const chartData = {
+                        labels: [],
+                        remainingData: [],
+                        effectiveRateData: []
+                    };
+
+                    for (let i = 1; i <= periods; i++) {
+                        const beginningBalance = remainingPrincipal;
+
+                        // Data for chart
+                        chartData.labels.push(`第${i}期`);
+                        chartData.remainingData.push(beginningBalance);
+                        chartData.effectiveRateData.push(feePerPeriod / beginningBalance);
+
+                        const row = `
+                        <tr class="text-sm hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 transition-all duration-300">
+                            <td class="px-6 py-4 whitespace-nowrap font-semibold text-indigo-600">${i}</td>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium">${currencyFormatter.format(beginningBalance)}</td>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium">${currencyFormatter.format(principalPerPeriod)}</td>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-red-600">${currencyFormatter.format(feePerPeriod)}</td>
+                        </tr>
+                    `;
+                        amortizationTableBody.innerHTML += row;
+
+                        remainingPrincipal -= principalPerPeriod;
+                    }
+                    return chartData;
+                }
+
+                function drawCostAnalysisChart(labels, remainingData, effectiveRateData) {
+                    const ctx = document.getElementById('cost-analysis-chart').getContext('2d');
+                    if (costAnalysisChart) costAnalysisChart.destroy();
+
+                    costAnalysisChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    type: 'line',
+                                    label: '剩余本金',
+                                    data: remainingData,
+                                    borderColor: 'rgba(67, 56, 202, 0.8)',
+                                    backgroundColor: 'rgba(67, 56, 202, 0.1)',
+                                    yAxisID: 'y-principal',
+                                    tension: 0.4,
+                                    fill: true,
+                                    borderWidth: 3,
+                                    pointBackgroundColor: 'rgba(67, 56, 202, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointBorderWidth: 3,
+                                    pointRadius: 6,
+                                    pointHoverRadius: 8,
+                                },
+                                {
+                                    type: 'bar',
+                                    label: '当期资金成本率',
+                                    data: effectiveRateData,
+                                    backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                                    borderColor: 'rgba(220, 38, 38, 1)',
+                                    borderWidth: 2,
+                                    borderRadius: 8,
+                                    borderSkipped: false,
+                                    yAxisID: 'y-rate',
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 20,
+                                        font: {
+                                            size: 12,
+                                            weight: 'bold'
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    titleColor: '#fff',
+                                    bodyColor: '#fff',
+                                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                                    borderWidth: 1,
+                                    cornerRadius: 12,
+                                    displayColors: true,
+                                    callbacks: {
+                                        label: function (context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            if (context.dataset.yAxisID === 'y-rate') {
+                                                label += `${(context.raw * 100).toFixed(2)}%`;
+                                            } else {
+                                                label += currencyFormatter.format(context.raw);
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            },
+                            interaction: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            scales: {
+                                x: {
+                                    display: true,
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.05)',
+                                        lineWidth: 1,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    }
+                                },
+                                'y-principal': {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    title: {
+                                        display: true,
+                                        text: '剩余本金 (元)',
+                                        font: {
+                                            size: 12,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    grid: {
+                                        color: 'rgba(67, 56, 202, 0.1)',
+                                        lineWidth: 1,
+                                    },
+                                    ticks: {
+                                        callback: (value) => currencyFormatter.format(value)
+                                    }
+                                },
+                                'y-rate': {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    title: {
+                                        display: true,
+                                        text: '当期成本率',
+                                        font: {
+                                            size: 12,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    grid: {
+                                        drawOnChartArea: false,
+                                        color: 'rgba(239, 68, 68, 0.1)',
+                                    },
+                                    ticks: {
+                                        callback: (value) => `${(value * 100).toFixed(2)}%`
+                                    }
+                                }
+                            },
+                            animation: {
+                                duration: 2000,
+                                easing: 'easeOutCubic'
+                            }
+                        }
+                    });
+                }
+
+                // 初始计算
+                setTimeout(() => {
+                    performCalculation();
+                }, 500);
+            });
+        </script>
+    </body>
+
+</html>
