@@ -1,0 +1,405 @@
+        :root {
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-info: #3b82f6;
+            --color-neutral: #6b7280;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .card-shadow {
+            box-shadow:
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .input-focus {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow:
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 400px;
+            /* 增加高度 */
+            width: 100%;
+        }
+
+        .chart-container-large {
+            position: relative;
+            margin: auto;
+            height: 500px;
+            /* 大屏幕下更大的图表 */
+            width: 100%;
+        }
+
+        @media (min-width: 1280px) {
+            .chart-container {
+                height: 500px;
+            }
+
+            #detailed-analysis {
+                margin-top: 2rem;
+            }
+
+            #detailed-analysis .bg-white {
+                padding: 3rem 2rem;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .animate-bounce-in {
+            animation: bounceIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .gradient-border {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 2px;
+            border-radius: 16px;
+        }
+
+        .gradient-border-content {
+            background: white;
+            border-radius: 14px;
+        }
+
+        .number-display {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .danger-number {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .success-number {
+            background: linear-gradient(135deg, #10b981, #059669);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .floating-animation {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+            }
+        }
+
+        .hidden-initial {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #detailed-analysis {
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #detailed-analysis.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Footer 样式 */
+        .footer {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 4rem;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateY(-2px);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            margin: 2rem 0;
+        }
+
+        .social-icon {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .stats-card:hover::before {
+            left: 100%;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 640px) {
+            .input-focus {
+                font-size: 16px;
+                /* 防止iOS缩放 */
+                padding: 1rem;
+            }
+
+            .stats-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        /* 风险等级色彩指示 */
+        .risk-low {
+            background: linear-gradient(135deg, var(--color-success), #059669);
+            border-color: var(--color-success);
+        }
+
+        .risk-medium {
+            background: linear-gradient(135deg, var(--color-warning), #d97706);
+            border-color: var(--color-warning);
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, var(--color-danger), #dc2626);
+            border-color: var(--color-danger);
+        }
+
+        /* 增强按钮交互 */
+        .btn-calculate {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-calculate::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-calculate:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 快捷选择按钮 */
+        .quick-select-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        .quick-select-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .quick-select-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* 建议卡片样式 */
+        .recommendation-card {
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-card.warning {
+            border-left-color: var(--color-warning);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+        }
+
+        .recommendation-card.info {
+            border-left-color: var(--color-info);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05));
+        }
+
+        .recommendation-card.danger {
+            border-left-color: var(--color-danger);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+        }
+
+        /* 输入验证样式 */
+        .input-valid {
+            border-color: var(--color-success) !important;
+            background-color: rgba(16, 185, 129, 0.05) !important;
+        }
+
+        .input-invalid {
+            border-color: var(--color-danger) !important;
+            background-color: rgba(239, 68, 68, 0.05) !important;
+        }
+
+        /* 导出按钮样式 */
+        .export-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
