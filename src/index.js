@@ -204,12 +204,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (recommendations.length > 0) {
                     recommendationsSection.innerHTML = recommendations.map(rec => `
-                            <div class="recommendation-card ${rec.type} p-4 rounded-lg">
-                                <div class="flex items-start gap-3">
-                                    <span class="text-2xl">${rec.icon}</span>
+                            <div class="recommendation-card ${rec.type} p-3 rounded-lg text-xs">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-xl">${rec.icon}</span>
                                     <div>
-                                        <h4 class="font-semibold text-gray-800 mb-1">${rec.title}</h4>
-                                        <p class="text-sm text-gray-600">${rec.message}</p>
+                                        <h4 class="font-semibold text-gray-800 mb-0.5">${rec.title}</h4>
+                                        <p class="text-gray-600">${rec.message}</p>
                                     </div>
                                 </div>
                             </div>
