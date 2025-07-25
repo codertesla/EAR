@@ -544,21 +544,58 @@
         .recommendation-card {
             border-left: 4px solid;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
         .recommendation-card.warning {
             border-left-color: var(--color-warning);
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.15));
         }
 
         .recommendation-card.info {
             border-left-color: var(--color-info);
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05));
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.15));
         }
 
         .recommendation-card.danger {
             border-left-color: var(--color-danger);
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15));
+        }
+
+        /* 改进文字对比度 */
+        .recommendation-card h4 {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .recommendation-card p {
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .recommendation-card.warning h4,
+        .recommendation-card.warning p {
+            color: #92400e;
+        }
+
+        .recommendation-card.info h4,
+        .recommendation-card.info p {
+            color: #1e40af;
+        }
+
+        .recommendation-card.danger h4,
+        .recommendation-card.danger p {
+            color: #991b1b;
         }
 
         /* 输入验证样式 */
