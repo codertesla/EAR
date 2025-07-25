@@ -4,12 +4,16 @@
             --color-danger: #ef4444;
             --color-info: #3b82f6;
             --color-neutral: #6b7280;
+            --color-primary: #667eea;
+            --color-secondary: #764ba2;
+            --color-accent: #8b5cf6;
         }
 
         body {
             font-family: 'Inter', 'Noto Sans SC', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            background-attachment: fixed;
         }
 
         .glass-effect {
@@ -20,13 +24,15 @@
 
         .card-shadow {
             box-shadow:
-                0 20px 25px -5px rgba(0, 0, 0, 0.1),
-                0 10px 10px -5px rgba(0, 0, 0, 0.04),
-                0 0 0 1px rgba(255, 255, 255, 0.05);
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 10px 20px -5px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .input-focus {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-width: 2px;
         }
 
         .input-focus:focus {
@@ -34,6 +40,12 @@
             box-shadow:
                 0 20px 25px -5px rgba(0, 0, 0, 0.1),
                 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #667eea;
+        }
+
+        .input-focus:hover:not(:focus) {
+            border-color: #a5b4fc;
+            background-color: rgba(255, 255, 255, 0.8);
         }
 
         .chart-container {
@@ -137,7 +149,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .danger-number {
@@ -146,7 +158,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .success-number {
@@ -155,7 +167,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .floating-animation {
@@ -171,6 +183,86 @@
 
             50% {
                 transform: translateY(-10px);
+            }
+        }
+
+        /* 增强的背景装饰 */
+        .background-decoration {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .decoration-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+        }
+
+        .decoration-1 {
+            top: 10%;
+            left: 10%;
+            width: 300px;
+            height: 300px;
+            animation: float-slow 15s ease-in-out infinite;
+        }
+
+        .decoration-2 {
+            bottom: 15%;
+            right: 15%;
+            width: 200px;
+            height: 200px;
+            animation: float-slow 12s ease-in-out infinite reverse;
+        }
+
+        .decoration-3 {
+            top: 40%;
+            right: 20%;
+            width: 150px;
+            height: 150px;
+            animation: float-medium 10s ease-in-out infinite;
+        }
+
+        @keyframes float-slow {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(-20px, -30px) rotate(5deg);
+            }
+
+            50% {
+                transform: translate(10px, -50px) rotate(-5deg);
+            }
+
+            75% {
+                transform: translate(30px, -20px) rotate(3deg);
+            }
+        }
+
+        @keyframes float-medium {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(-15px, -20px) rotate(-3deg);
+            }
+
+            50% {
+                transform: translate(20px, -40px) rotate(4deg);
+            }
+
+            75% {
+                transform: translate(-10px, -15px) rotate(-2deg);
             }
         }
 
@@ -261,12 +353,33 @@
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .btn-primary:hover {
             background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
             transform: translateY(-2px);
             box-shadow: 0 20px 25px -5px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
         }
 
         .stats-card {
@@ -304,6 +417,47 @@
             .chart-container {
                 height: 300px;
             }
+        }
+
+        /* 表格样式优化 */
+        .data-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 1rem 1.5rem;
+            text-align: left;
+        }
+
+        .data-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background-color 0.2s ease;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background-color: rgba(102, 126, 234, 0.05);
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .data-table tr:nth-child(even):hover td {
+            background-color: rgba(102, 126, 234, 0.08);
         }
 
         /* 风险等级色彩指示 */
@@ -350,6 +504,19 @@
         .quick-select-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-select-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .quick-select-btn:hover {
@@ -357,10 +524,20 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
+        .quick-select-btn:hover::before {
+            left: 100%;
+        }
+
         .quick-select-btn.active {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .quick-select-btn:active {
+            transform: translateY(0) scale(0.98);
         }
 
         /* 建议卡片样式 */
@@ -399,10 +576,31 @@
         .export-btn {
             background: linear-gradient(135deg, #10b981, #059669);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .export-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .export-btn:hover {
             background: linear-gradient(135deg, #059669, #047857);
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .export-btn:hover::before {
+            left: 100%;
+        }
+
+        .export-btn:active {
+            transform: translateY(0) scale(0.98);
         }
