@@ -1,428 +1,430 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>信用卡分期真实年化利率 (EAR) 计算器</title>
-    <!-- 引入 Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Chart.js for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>信用卡分期真实年化利率 (EAR) 计算器</title>
+        <!-- 引入 Tailwind CSS for styling -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- 引入 Chart.js for data visualization -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet">
+        <link rel="icon" type="image/svg+xml" href="logo.svg">
 
-    <link rel="stylesheet" href="styles.css">
-</head>
+        <link rel="stylesheet" href="styles.css">
+    </head>
 
-<body class="text-gray-800">
-    <!-- 背景装饰 -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div
-            class="absolute top-1/4 left-1/4 w-96 h-96 bg-white bg-opacity-10 rounded-full blur-3xl floating-animation">
+    <body class="text-gray-800">
+        <!-- 增强的背景装饰 -->
+        <div class="background-decoration">
+            <div class="decoration-element decoration-1"></div>
+            <div class="decoration-element decoration-2"></div>
+            <div class="decoration-element decoration-3"></div>
         </div>
-        <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-white bg-opacity-5 rounded-full blur-3xl floating-animation"
-            style="animation-delay: 1s;"></div>
-    </div>
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 relative z-10">
-        <!-- 优化的头部 -->
-        <header class="text-center mb-12 animate-fade-in">
-            <div class="inline-block p-8 glass-effect rounded-3xl mb-6">
-                <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
-                    信用卡分期真实利率计算器
-                </h1>
-                <p class="text-xl text-white text-opacity-90 font-medium">
-                    看清"免息"背后的真实成本
-                </p>
-                <div class="mt-6 flex justify-center">
-                    <div class="h-1 w-24 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+        <div class="container mx-auto p-4 sm:p-6 md:p-8 relative z-10">
+            <!-- 优化的头部 -->
+            <header class="text-center mb-12 animate-fade-in">
+                <div class="inline-block p-8 glass-effect rounded-3xl mb-6">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
+                        信用卡分期真实利率计算器
+                    </h1>
+                    <p class="text-xl text-white text-opacity-90 font-medium">
+                        看清"免息"背后的真实成本
+                    </p>
+                    <div class="mt-6 flex justify-center">
+                        <div class="h-1 w-24 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <!-- 上半部分：计算器和核心指标 -->
-        <main class="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6 mb-8">
-            <!-- 左侧：输入表单 -->
-            <div class="lg:col-span-2 animate-slide-up">
-                <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift">
-                    <h2 class="text-2xl font-bold mb-8 flex items-center text-gray-800">
-                        <div class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mr-4 shadow-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l12.232-12.232z" />
-                            </svg>
-                        </div>
-                        <span>计算参数</span>
-                    </h2>
+            <!-- 上半部分：计算器和核心指标 -->
+            <main class="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6 mb-8">
+                <!-- 左侧：输入表单 -->
+                <div class="lg:col-span-2 animate-slide-up">
+                    <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift">
+                        <h2 class="text-2xl font-bold mb-8 flex items-center text-gray-800">
+                            <div class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mr-4 shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l12.232-12.232z" />
+                                </svg>
+                            </div>
+                            <span>计算参数</span>
+                        </h2>
 
-                    <form id="calculator-form" class="space-y-7">
-                        <div class="space-y-2">
-                            <label for="principal" class="block text-sm font-semibold text-gray-700">分期总金额</label>
-                            <div class="relative">
-                                <div class="pointer-events-none absolute inset-y-0 left-0 pl-4 flex items-center">
-                                    <span class="text-gray-500 text-lg font-medium">¥</span>
+                        <form id="calculator-form" class="space-y-7">
+                            <div class="space-y-2">
+                                <label for="principal" class="block text-sm font-semibold text-gray-700">分期总金额</label>
+                                <div class="relative">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 pl-4 flex items-center">
+                                        <span class="text-gray-500 text-lg font-medium">¥</span>
+                                    </div>
+                                    <input type="number" id="principal" value="12000" step="0.01"
+                                        class="input-focus block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
+                                        placeholder="例如: 12000">
                                 </div>
-                                <input type="number" id="principal" value="12000" step="0.01"
-                                    class="input-focus block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
-                                    placeholder="例如: 12000">
                             </div>
-                        </div>
 
-                        <div class="space-y-2">
-                            <label for="periods" class="block text-sm font-semibold text-gray-700">分期期数</label>
-                            <input type="number" id="periods" value="12"
-                                class="input-focus block w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
-                                placeholder="例如: 12">
-                        </div>
+                            <div class="space-y-2">
+                                <label for="periods" class="block text-sm font-semibold text-gray-700">分期期数</label>
+                                <input type="number" id="periods" value="12"
+                                    class="input-focus block w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
+                                    placeholder="例如: 12">
+                            </div>
 
-                        <div class="space-y-2">
-                            <label for="fee" class="block text-sm font-semibold text-gray-700">每期手续费/利息</label>
-                            <input type="number" id="fee" value="72" step="0.01"
-                                class="input-focus block w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
-                                placeholder="例如: 72">
-                        </div>
+                            <div class="space-y-2">
+                                <label for="fee" class="block text-sm font-semibold text-gray-700">每期手续费/利息</label>
+                                <input type="number" id="fee" value="72" step="0.01"
+                                    class="input-focus block w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-20 focus:border-indigo-500 text-lg font-medium bg-gray-50 hover:bg-white transition-all duration-300"
+                                    placeholder="例如: 72">
+                            </div>
 
-                        <!-- 快捷选择按钮 -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">常用分期方案</label>
-                            <div id="quick-select-container" class="grid grid-cols-2 gap-2">
-                                <button type="button"
-                                    class="quick-select-btn p-3 text-sm bg-gray-100 hover:bg-indigo-100 rounded-lg transition-colors"
-                                    data-periods="3" data-fee="0">
-                                    3期免息
-                                </button>
-                                <button type="button"
-                                    class="quick-select-btn p-3 text-sm bg-gray-100 hover:bg-indigo-100 rounded-lg transition-colors"
-                                    data-periods="6" data-fee="36">
-                                    6期低息
-                                </button>
-                                <button type="button"
-                                    class="quick-select-btn p-3 text-sm bg-gray-100 hover:bg-indigo-100 rounded-lg transition-colors"
-                                    data-periods="12" data-fee="72">
-                                    12期标准
-                                </button>
-                                <button type="button"
-                                    class="quick-select-btn p-3 text-sm bg-gray-100 hover:bg-indigo-100 rounded-lg transition-colors"
-                                    data-periods="24" data-fee="120">
-                                    24期长期
+                            <!-- 快捷选择按钮 -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">常用分期方案</label>
+                                <div id="quick-select-container" class="grid grid-cols-2 gap-2">
+                                    <button type="button"
+                                        class="quick-select-btn p-3 text-sm bg-gray-100 hover:bg-indigo-100 rounded-lg transition-colors"
+                                        data-periods="3" data-fee="0">
+                                        3期免息
+                                    </button>
+                                    <button type="button"
+                                        class="quick-select-btn p-3 text-sm bg-gray-100 hover:bg-indigo-100 rounded-lg transition-colors"
+                                        data-periods="6" data-fee="36">
+                                        6期低息
+                                    </button>
+                                    <button type="button"
+                                        class="quick-select-btn p-3 text-sm bg-gray-100 hover:bg-indigo-100 rounded-lg transition-colors"
+                                        data-periods="12" data-fee="72">
+                                        12期标准
+                                    </button>
+                                    <button type="button"
+                                        class="quick-select-btn p-3 text-sm bg-gray-100 hover:bg-indigo-100 rounded-lg transition-colors"
+                                        data-periods="24" data-fee="120">
+                                        24期长期
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 实时预览提示 -->
+                            <div id="quick-preview"
+                                class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg hidden">
+                                <div class="flex items-center gap-2 text-blue-700 text-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>实时预览：真实年化利率约 <span id="preview-ear" class="font-semibold">--</span></span>
+                                </div>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="submit" id="submit-button"
+                                    class="w-full btn-primary btn-calculate text-white font-bold py-5 px-6 rounded-2xl shadow-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 text-lg relative overflow-hidden">
+                                    <span id="button-text" class="relative z-10">立即计算</span>
+                                    <div id="button-loader"
+                                        class="absolute inset-0 flex items-center justify-center hidden">
+                                        <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                        <span class="ml-2">计算中...</span>
+                                    </div>
                                 </button>
                             </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 右侧：核心指标展示 -->
+                <div id="results-section" class="lg:col-span-3 hidden-initial">
+                    <!-- 利率对比 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div
+                            class="stats-card bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift text-center">
+                            <div class="flex justify-center mb-4">
+                                <div class="p-4 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">名义年利率</h3>
+                            <p id="nominal-rate-result" class="text-5xl font-extrabold number-display my-4">7.20%</p>
+                            <p class="text-sm text-gray-500 font-medium">银行常用宣传口径</p>
                         </div>
 
-                        <!-- 实时预览提示 -->
-                        <div id="quick-preview" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg hidden">
-                            <div class="flex items-center gap-2 text-blue-700 text-sm">
+                        <div
+                            class="stats-card bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift text-center pulse-glow border-2 border-red-200">
+                            <div class="flex justify-center mb-4">
+                                <div class="p-4 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">真实年化利率 (EAR)</h3>
+                            <p id="ear-result" class="text-5xl font-extrabold danger-number my-4">13.84%</p>
+                            <p class="text-sm text-gray-500 font-medium">资金的真实年化成本</p>
+                        </div>
+                    </div>
+
+                    <!-- 财务总览 -->
+                    <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800">财务总览</h3>
+                            <button id="export-btn"
+                                class="export-btn text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
-                                <span>实时预览：真实年化利率约 <span id="preview-ear" class="font-semibold">--</span></span>
-                            </div>
-                        </div>
-
-                        <div class="pt-4">
-                            <button type="submit" id="submit-button"
-                                class="w-full btn-primary btn-calculate text-white font-bold py-5 px-6 rounded-2xl shadow-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 text-lg relative overflow-hidden">
-                                <span id="button-text" class="relative z-10">立即计算</span>
-                                <div id="button-loader"
-                                    class="absolute inset-0 flex items-center justify-center hidden">
-                                    <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
-                                    <span class="ml-2">计算中...</span>
-                                </div>
+                                导出数据
                             </button>
                         </div>
-                    </form>
-                </div>
-            </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div
+                                class="text-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200">
+                                <div class="flex justify-center mb-3">
+                                    <div class="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 font-semibold mb-2">贷款本金</p>
+                                <p id="total-principal" class="text-2xl font-bold success-number">¥12,000.00</p>
+                            </div>
 
-            <!-- 右侧：核心指标展示 -->
-            <div id="results-section" class="lg:col-span-3 hidden-initial">
-                <!-- 利率对比 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div
-                        class="stats-card bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift text-center">
-                        <div class="flex justify-center mb-4">
-                            <div class="p-4 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                </svg>
+                            <div
+                                class="text-center p-6 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl border border-orange-200">
+                                <div class="flex justify-center mb-3">
+                                    <div class="p-3 bg-gradient-to-br from-orange-500 to-yellow-600 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 font-semibold mb-2">总支付费用</p>
+                                <p id="total-fees" class="text-2xl font-bold text-orange-600">¥864.00</p>
+                            </div>
+
+                            <div
+                                class="text-center p-6 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl border border-purple-200">
+                                <div class="flex justify-center mb-3">
+                                    <div class="p-3 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 font-semibold mb-2">还款总额</p>
+                                <p id="total-payment" class="text-2xl font-bold number-display">¥12,864.00</p>
                             </div>
                         </div>
-                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">名义年利率</h3>
-                        <p id="nominal-rate-result" class="text-5xl font-extrabold number-display my-4">7.20%</p>
-                        <p class="text-sm text-gray-500 font-medium">银行常用宣传口径</p>
                     </div>
 
+                    <!-- 智能建议区域 -->
+                    <div id="recommendations-section" class="mt-6 space-y-4 hidden">
+                        <!-- 建议卡片将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </main>
+
+            <!-- 详细数据区域：跨越整个页面宽度 -->
+            <section id="detailed-analysis" class="hidden-initial">
+                <!-- 图表区域 - 全宽度显示 -->
+                <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift mb-8">
+                    <h3 class="text-3xl font-bold mb-8 text-gray-800 text-center">资金成本分析</h3>
                     <div
-                        class="stats-card bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift text-center pulse-glow border-2 border-red-200">
-                        <div class="flex justify-center mb-4">
-                            <div class="p-4 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">真实年化利率 (EAR)</h3>
-                        <p id="ear-result" class="text-5xl font-extrabold danger-number my-4">13.84%</p>
-                        <p class="text-sm text-gray-500 font-medium">资金的真实年化成本</p>
+                        class="chart-container bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border-2 border-gray-100">
+                        <canvas id="cost-analysis-chart"></canvas>
                     </div>
                 </div>
 
-                <!-- 财务总览 -->
+                <!-- 还款明细表 - 全宽度显示 -->
                 <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-gray-800">财务总览</h3>
-                        <button id="export-btn"
-                            class="export-btn text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            导出数据
-                        </button>
+                    <h3 class="text-3xl font-bold mb-8 text-gray-800 text-center">还款明细表</h3>
+                    <div
+                        class="overflow-auto rounded-2xl border-2 border-gray-100 bg-gradient-to-br from-gray-50 to-white">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">期数</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">期初余额</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">还款本金</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">支付费用</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">当期费率</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">期末余额</th>
+                                </tr>
+                            </thead>
+                            <tbody id="amortization-table" class="bg-white">
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                        <div
-                            class="text-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200">
-                            <div class="flex justify-center mb-3">
-                                <div class="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 font-semibold mb-2">贷款本金</p>
-                            <p id="total-principal" class="text-2xl font-bold success-number">¥12,000.00</p>
-                        </div>
+                </div>
+            </section>
 
-                        <div
-                            class="text-center p-6 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl border border-orange-200">
-                            <div class="flex justify-center mb-3">
-                                <div class="p-3 bg-gradient-to-br from-orange-500 to-yellow-600 rounded-xl">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 font-semibold mb-2">总支付费用</p>
-                            <p id="total-fees" class="text-2xl font-bold text-orange-600">¥864.00</p>
-                        </div>
-
-                        <div
-                            class="text-center p-6 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl border border-purple-200">
-                            <div class="flex justify-center mb-3">
-                                <div class="p-3 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+            <!-- Footer -->
+            <footer class="footer py-12 px-4 sm:px-6 md:px-8">
+                <div class="max-w-6xl mx-auto">
+                    <!-- 主要内容区域 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                        <!-- 项目信息 -->
+                        <div class="text-center md:text-left">
+                            <h3
+                                class="text-xl font-bold text-white mb-4 flex items-center justify-center md:justify-start">
+                                <div class="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                     </svg>
                                 </div>
+                                EAR 计算器
+                            </h3>
+                            <p class="text-white text-opacity-80 text-sm leading-relaxed">
+                                透明化信用卡分期真实成本，<br>
+                                帮助您做出明智的金融决策。
+                            </p>
+                        </div>
+
+                        <!-- 快速链接 -->
+                        <div class="text-center">
+                            <h4 class="text-lg font-semibold text-white mb-4">快速链接</h4>
+                            <div class="space-y-2">
+                                <div>
+                                    <a href="#calculator-form" class="footer-link text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l12.232-12.232z" />
+                                        </svg>
+                                        开始计算
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="#detailed-analysis" class="footer-link text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                        数据分析
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://github.com/codertesla/EAR/issues" class="footer-link text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                        联系我们
+                                    </a>
+                                </div>
                             </div>
-                            <p class="text-sm text-gray-600 font-semibold mb-2">还款总额</p>
-                            <p id="total-payment" class="text-2xl font-bold number-display">¥12,864.00</p>
+                        </div>
+
+                        <!-- 开源信息 -->
+                        <div class="text-center md:text-right">
+                            <h4 class="text-lg font-semibold text-white mb-4">开源项目</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <a href="https://github.com/codertesla/EAR" target="_blank"
+                                        class="footer-link text-sm group">
+                                        <svg class="h-5 w-5 social-icon" fill="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                        </svg>
+                                        GitHub 仓库
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://github.com/codertesla/EAR/issues" target="_blank"
+                                        class="footer-link text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                        问题反馈
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://github.com/codertesla/EAR/blob/main/LICENSE" target="_blank"
+                                        class="footer-link text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        MIT 许可证
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 智能建议区域 -->
-                <div id="recommendations-section" class="mt-6 space-y-4 hidden">
-                    <!-- 建议卡片将通过JavaScript动态生成 -->
-                </div>
-            </div>
-        </main>
+                    <!-- 分隔线 -->
+                    <div class="footer-divider"></div>
 
-        <!-- 详细数据区域：跨越整个页面宽度 -->
-        <section id="detailed-analysis" class="hidden-initial">
-            <!-- 图表区域 - 全宽度显示 -->
-            <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift mb-8">
-                <h3 class="text-3xl font-bold mb-8 text-gray-800 text-center">资金成本分析</h3>
-                <div
-                    class="chart-container bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border-2 border-gray-100">
-                    <canvas id="cost-analysis-chart"></canvas>
-                </div>
-            </div>
-
-            <!-- 还款明细表 - 全宽度显示 -->
-            <div class="bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-3xl card-shadow hover-lift">
-                <h3 class="text-3xl font-bold mb-8 text-gray-800 text-center">还款明细表</h3>
-                <div class="overflow-auto rounded-2xl border-2 border-gray-100 bg-gradient-to-br from-gray-50 to-white">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white sticky top-0">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">期数</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">期初余额</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">还款本金</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">支付费用</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">当期费率</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">期末余额</th>
-                            </tr>
-                        </thead>
-                        <tbody id="amortization-table" class="bg-white divide-y divide-gray-100">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="footer py-12 px-4 sm:px-6 md:px-8">
-            <div class="max-w-6xl mx-auto">
-                <!-- 主要内容区域 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                    <!-- 项目信息 -->
-                    <div class="text-center md:text-left">
-                        <h3 class="text-xl font-bold text-white mb-4 flex items-center justify-center md:justify-start">
-                            <div class="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg mr-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none"
+                    <!-- 底部版权信息 -->
+                    <div
+                        class="flex flex-col md:flex-row justify-between items-center text-sm text-white text-opacity-70">
+                        <div class="mb-4 md:mb-0">
+                            <p>&copy; 2025 EAR Calculator. 保留所有权利.</p>
+                        </div>
+                        <div class="flex items-center space-x-6">
+                            <span class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>
-                            </div>
-                            EAR 计算器
-                        </h3>
-                        <p class="text-white text-opacity-80 text-sm leading-relaxed">
-                            透明化信用卡分期真实成本，<br>
-                            帮助您做出明智的金融决策。
-                        </p>
-                    </div>
-
-                    <!-- 快速链接 -->
-                    <div class="text-center">
-                        <h4 class="text-lg font-semibold text-white mb-4">快速链接</h4>
-                        <div class="space-y-2">
-                            <div>
-                                <a href="#calculator-form" class="footer-link text-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l12.232-12.232z" />
-                                    </svg>
-                                    开始计算
-                                </a>
-                            </div>
-                            <div>
-                                <a href="#detailed-analysis" class="footer-link text-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                    </svg>
-                                    数据分析
-                                </a>
-                            </div>
-                            <div>
-                                <a href="https://github.com/codertesla/EAR/issues" class="footer-link text-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    联系我们
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 开源信息 -->
-                    <div class="text-center md:text-right">
-                        <h4 class="text-lg font-semibold text-white mb-4">开源项目</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <a href="https://github.com/codertesla/EAR" target="_blank"
-                                    class="footer-link text-sm group">
-                                    <svg class="h-5 w-5 social-icon" fill="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                    </svg>
-                                    GitHub 仓库
-                                </a>
-                            </div>
-                            <div>
-                                <a href="https://github.com/codertesla/EAR/issues" target="_blank"
-                                    class="footer-link text-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                    </svg>
-                                    问题反馈
-                                </a>
-                            </div>
-                            <div>
-                                <a href="https://github.com/codertesla/EAR/blob/main/LICENSE" target="_blank"
-                                    class="footer-link text-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    MIT 许可证
-                                </a>
-                            </div>
+                                用心制作
+                            </span>
+                            <span class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                性能优化
+                            </span>
+                            <span class="text-xs opacity-60">
+                                v1.0.0
+                            </span>
                         </div>
                     </div>
                 </div>
+            </footer>
+        </div>
 
-                <!-- 分隔线 -->
-                <div class="footer-divider"></div>
-
-                <!-- 底部版权信息 -->
-                <div class="flex flex-col md:flex-row justify-between items-center text-sm text-white text-opacity-70">
-                    <div class="mb-4 md:mb-0">
-                        <p>&copy; 2025 EAR Calculator. 保留所有权利.</p>
-                    </div>
-                    <div class="flex items-center space-x-6">
-                        <span class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                            用心制作
-                        </span>
-                        <span class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            性能优化
-                        </span>
-                        <span class="text-xs opacity-60">
-                            v1.0.0
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script src="src/index.js"></script>
-</body>
+        <script src="src/index.js"></script>
+    </body>
 
 </html>
