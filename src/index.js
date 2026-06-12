@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const methodRadios = document.querySelectorAll('input[name="repayment_method"]');
             const feeContainer = document.getElementById('fee-container');
             const monthlyPaymentContainer = document.getElementById('monthly-payment-container');
-            const quickSelectWrapper = document.getElementById('quick-select-wrapper');
+
 
             methodRadios.forEach(radio => {
                 radio.addEventListener('change', (e) => {
@@ -68,40 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (e.target.value === 'equal-fee') {
                         feeContainer.classList.remove('hidden');
                         monthlyPaymentContainer.classList.add('hidden');
-                        if (quickSelectWrapper) quickSelectWrapper.classList.remove('hidden');
                     } else {
                         feeContainer.classList.add('hidden');
                         monthlyPaymentContainer.classList.remove('hidden');
-                        if (quickSelectWrapper) quickSelectWrapper.classList.add('hidden');
                     }
 
-                    if (validateAllInputs()) {
-                        performQuickCalculation();
-                    }
-                });
-            });
-
-            // 快捷选择按钮事件
-            const quickSelectBtns = document.querySelectorAll('.quick-select-btn');
-            quickSelectBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // 移除其他按钮的激活状态
-                    quickSelectBtns.forEach(b => {
-                        b.classList.remove('bg-white', 'text-zinc-900', 'border-transparent', 'shadow-sm', 'active');
-                        b.classList.add('bg-zinc-800', 'text-zinc-300', 'border-white/5');
-                    });
-                    // 激活当前按钮
-                    btn.classList.remove('bg-zinc-800', 'text-zinc-300', 'border-white/5');
-                    btn.classList.add('bg-white', 'text-zinc-900', 'border-transparent', 'shadow-sm', 'active');
-
-                    // 设置对应的值
-                    const periods = btn.dataset.periods;
-                    const fee = btn.dataset.fee;
-
-                    document.getElementById('periods').value = periods;
-                    document.getElementById('fee').value = fee;
-
-                    // 触发计算
                     if (validateAllInputs()) {
                         performQuickCalculation();
                     }
@@ -331,8 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (recommendations.length > 0) {
                     recommendationsSection.innerHTML = recommendations.map(rec => `
                             <div class="bg-zinc-800 border border-white/5 p-3 rounded-lg text-xs shadow-sm">
-                                <div class="flex items-start gap-2">
-                                    <span class="text-lg">${rec.icon}</span>
+                                <div class="flex items-start gap-2.5">
+                                    <span class="rec-icon rec-icon-${rec.type} flex-shrink-0 mt-0.5">${rec.icon}</span>
                                     <div>
                                         <h4 class="font-medium text-zinc-100 mb-0.5">${rec.title}</h4>
                                         <p class="text-zinc-400 leading-relaxed">${rec.message}</p>
@@ -349,26 +320,35 @@ document.addEventListener('DOMContentLoaded', () => {
             function generateRecommendations(ear, nominalRate) {
                 const recommendations = [];
 
+                // SVG icon helpers — small monochrome outline icons
+                const icons = {
+                    danger: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>',
+                    warning: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>',
+                    info: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>',
+                    chart: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg>',
+                    check: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>'
+                };
+
                 if (ear > 0.20) {
                     recommendations.push({
                         type: 'danger',
                         title: '极高成本警告',
                         message: '真实年化利率超过20%，强烈建议寻找其他融资方式，如银行个人贷款或信用贷款。',
-                        icon: '🚨'
+                        icon: icons.danger
                     });
                 } else if (ear > 0.15) {
                     recommendations.push({
                         type: 'warning',
                         title: '高成本警告',
                         message: '真实年化利率超过15%，建议考虑其他融资方式或缩短分期期数。',
-                        icon: '⚠️'
+                        icon: icons.warning
                     });
                 } else if (ear > 0.10) {
                     recommendations.push({
                         type: 'info',
                         title: '中等成本提醒',
                         message: '利率处于中等水平，可考虑提前还款以降低总成本。',
-                        icon: '💡'
+                        icon: icons.info
                     });
                 }
 
@@ -377,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         type: 'warning',
                         title: '利率差异显著',
                         message: `真实利率(${(ear * 100).toFixed(2)}%)远高于名义利率(${(nominalRate * 100).toFixed(2)}%)，请注意隐藏的资金成本。`,
-                        icon: '📊'
+                        icon: icons.chart
                     });
                 }
 
@@ -385,8 +365,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     recommendations.push({
                         type: 'info',
                         title: '成本合理',
-                        message: '当前分期方案 of 资金成本相对合理，可以考虑使用。',
-                        icon: '✅'
+                        message: '当前分期方案的资金成本相对合理，可以考虑使用。',
+                        icon: icons.check
                     });
                 }
 
@@ -712,18 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // 数字键1-4快速选择方案
-                if (e.key >= '1' && e.key <= '4' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-                    const activeElement = document.activeElement;
-                    if (activeElement.tagName !== 'INPUT') {
-                        e.preventDefault();
-                        const btnIndex = parseInt(e.key) - 1;
-                        const quickBtns = document.querySelectorAll('.quick-select-btn');
-                        if (quickBtns[btnIndex]) {
-                            quickBtns[btnIndex].click();
-                        }
-                    }
-                }
+
             });
 
             // 添加快捷键提示
@@ -733,7 +702,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="space-y-1">
                         <div><kbd class="bg-gray-600 px-1 rounded">Ctrl+Enter</kbd> 快速计算</div>
                         <div><kbd class="bg-gray-600 px-1 rounded">Ctrl+E</kbd> 导出数据</div>
-                        <div><kbd class="bg-gray-600 px-1 rounded">1-4</kbd> 选择方案</div>
                     </div>
                 `;
             document.body.appendChild(shortcutHint);

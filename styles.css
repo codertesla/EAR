@@ -145,6 +145,35 @@ body {
 }
 
 /* ==============================
+   Recommendation Icons
+   ============================== */
+
+.rec-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.rec-icon-danger {
+    color: var(--color-risk-high);
+    background: rgba(244, 63, 94, 0.12);
+}
+
+.rec-icon-warning {
+    color: var(--color-risk-medium);
+    background: rgba(245, 158, 11, 0.12);
+}
+
+.rec-icon-info {
+    color: var(--color-risk-low);
+    background: rgba(16, 185, 129, 0.12);
+}
+
+/* ==============================
    Animations
    ============================== */
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>真实利率 (EAR) 计算器</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -45,16 +46,16 @@
             </p>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10 items-start lg:items-stretch">
             <!-- 左侧：表单 -->
-            <div class="lg:col-span-5 animate-slide-up">
-                <div class="bg-zinc-900 border border-white/10 rounded-xl p-6 shadow-sm">
+            <div class="lg:col-span-5 animate-slide-up flex flex-col">
+                <div class="bg-zinc-900 border border-white/10 rounded-xl p-6 shadow-sm flex-1 flex flex-col">
                     <h2 class="text-lg font-medium text-white mb-6 tracking-tight flex items-center gap-2">
                         <svg class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
                         参数配置
                     </h2>
 
-                    <form id="calculator-form" class="space-y-5">
+                    <form id="calculator-form" class="space-y-5 flex-1 flex flex-col">
                         
                         <!-- 还款方式 -->
                         <div class="space-y-2">
@@ -77,16 +78,6 @@
                             </div>
                         </div>
 
-                        <!-- 常用方案 -->
-                        <div class="space-y-2" id="quick-select-wrapper">
-                            <label class="block text-sm font-medium text-zinc-300">快速选择</label>
-                            <div class="grid grid-cols-4 gap-2">
-                                <button type="button" class="quick-select-btn px-2 py-1.5 text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-md transition border border-white/5" data-periods="3" data-fee="0">3期</button>
-                                <button type="button" class="quick-select-btn px-2 py-1.5 text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-md transition border border-white/5" data-periods="6" data-fee="36">6期</button>
-                                <button type="button" class="quick-select-btn active px-2 py-1.5 text-xs font-medium bg-white text-zinc-900 rounded-md transition border border-transparent shadow-sm" data-periods="12" data-fee="72">12期</button>
-                                <button type="button" class="quick-select-btn px-2 py-1.5 text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-md transition border border-white/5" data-periods="24" data-fee="120">24期</button>
-                            </div>
-                        </div>
 
                         <!-- 金额 -->
                         <div class="space-y-2">
@@ -124,7 +115,7 @@
                             </div>
                         </div>
 
-                        <div class="pt-2">
+                        <div class="pt-2 mt-auto">
                             <button type="submit" id="submit-button"
                                 class="w-full bg-white text-zinc-900 hover:bg-zinc-200 font-medium py-2 px-4 rounded-md text-sm transition-colors relative flex items-center justify-center h-10">
                                 <span id="button-text">开始计算</span>
@@ -166,7 +157,7 @@
                 </div>
 
                 <!-- 财务明细 -->
-                <div class="bg-zinc-900 border border-white/10 rounded-xl p-6 shadow-sm">
+                <div class="bg-zinc-900 border border-white/10 rounded-xl p-6 shadow-sm flex-1 flex flex-col">
                     <div class="flex justify-between items-center mb-5 pb-4 border-b border-white/5">
                         <h3 class="text-base font-medium text-white">财务明细</h3>
                         <button id="export-btn" class="text-xs text-zinc-400 hover:text-white transition-colors flex items-center gap-1 bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md border border-zinc-700">
@@ -189,7 +180,7 @@
                         </div>
                     </div>
                     <!-- 成本占比进度条 -->
-                    <div class="cost-ratio-bar-wrapper">
+                    <div class="cost-ratio-bar-wrapper mt-auto">
                         <div class="flex items-center justify-between mb-1.5">
                             <span class="text-xs text-zinc-500">成本占比</span>
                             <span id="cost-ratio-label" class="text-xs font-medium font-mono text-zinc-400">6.72%</span>
