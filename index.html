@@ -28,7 +28,7 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -142,33 +142,39 @@
             </div>
 
             <!-- 右侧：结果面板 -->
-            <div id="results-section" class="lg:col-span-7 hidden-initial flex flex-col gap-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- EAR卡片 (高亮突出) -->
-                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-sm flex flex-col justify-center">
-                        <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-1">真实年化利率 (EAR)</p>
-                        <p id="ear-result" class="text-4xl md:text-5xl font-semibold tracking-tight text-white font-mono">13.84%</p>
-                        <p class="text-xs text-zinc-500 mt-2">资金的真实年化成本</p>
-                    </div>
-                    
-                    <!-- 名义利率卡片 -->
-                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-sm flex flex-col justify-center">
-                        <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-1">名义年利率</p>
-                        <p id="nominal-rate-result" class="text-3xl md:text-4xl font-medium tracking-tight text-zinc-300 font-mono">7.20%</p>
-                        <p class="text-xs text-zinc-500 mt-2">银行常用宣传口径</p>
+            <div id="results-section" class="lg:col-span-7 hidden-initial flex flex-col gap-5">
+                <!-- 利率结果整合卡片 -->
+                <div id="rate-card" class="stats-card rate-card-low bg-zinc-900 border rounded-xl p-6 shadow-sm relative overflow-hidden">
+                    <div class="rate-card-accent"></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- EAR -->
+                        <div class="flex flex-col justify-center">
+                            <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-1.5">真实年化利率 (EAR)</p>
+                            <p id="ear-result" class="text-4xl md:text-5xl font-semibold tracking-tight text-white font-mono">13.84%</p>
+                            <p class="text-xs text-zinc-500 mt-2">资金的真实年化成本</p>
+                        </div>
+                        <!-- 名义利率 & 成本倍数 -->
+                        <div class="flex flex-col justify-center sm:border-l sm:border-white/5 sm:pl-6">
+                            <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-1.5">名义年利率</p>
+                            <p id="nominal-rate-result" class="text-3xl md:text-4xl font-medium tracking-tight text-zinc-300 font-mono">7.20%</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="text-xs text-zinc-500">银行常用宣传口径</span>
+                                <span id="cost-multiplier" class="text-xs font-medium px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">×1.92</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 财务总览 (极简指标流) -->
+                <!-- 财务明细 -->
                 <div class="bg-zinc-900 border border-white/10 rounded-xl p-6 shadow-sm">
-                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/5">
+                    <div class="flex justify-between items-center mb-5 pb-4 border-b border-white/5">
                         <h3 class="text-base font-medium text-white">财务明细</h3>
                         <button id="export-btn" class="text-xs text-zinc-400 hover:text-white transition-colors flex items-center gap-1 bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md border border-zinc-700">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             导出
                         </button>
                     </div>
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-3 gap-4 mb-5">
                         <div>
                             <p class="text-xs text-zinc-500 mb-1">贷款本金</p>
                             <p id="total-principal" class="text-lg font-medium text-white font-mono">¥12,000.00</p>
@@ -182,19 +188,28 @@
                             <p id="total-payment" class="text-lg font-medium text-zinc-300 font-mono">¥12,864.00</p>
                         </div>
                     </div>
+                    <!-- 成本占比进度条 -->
+                    <div class="cost-ratio-bar-wrapper">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-xs text-zinc-500">成本占比</span>
+                            <span id="cost-ratio-label" class="text-xs font-medium font-mono text-zinc-400">6.72%</span>
+                        </div>
+                        <div class="cost-ratio-track">
+                            <div id="cost-ratio-principal" class="cost-ratio-segment cost-ratio-principal" style="width: 93.28%"></div>
+                            <div id="cost-ratio-fee" class="cost-ratio-segment cost-ratio-fee" style="width: 6.72%"></div>
+                        </div>
+                        <div class="flex items-center justify-between mt-1.5">
+                            <div class="flex items-center gap-3">
+                                <span class="flex items-center gap-1 text-xs text-zinc-500"><span class="w-2 h-2 rounded-sm bg-white/20 inline-block"></span>本金</span>
+                                <span class="flex items-center gap-1 text-xs text-zinc-500"><span class="w-2 h-2 rounded-sm cost-ratio-fee-dot inline-block"></span>利息/手续费</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 建议区域 -->
                 <div id="recommendations-section" class="space-y-3 hidden">
                     <!-- 通过JS动态生成极简暗色卡片 -->
-                </div>
-
-                <!-- 成本走势图 (移动到右侧填补视觉空间) -->
-                <div class="bg-zinc-900 border border-white/10 rounded-xl p-6 shadow-sm">
-                    <h3 class="text-base font-medium text-white mb-6">成本走势分析</h3>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="cost-analysis-chart"></canvas>
-                    </div>
                 </div>
             </div>
         </main>

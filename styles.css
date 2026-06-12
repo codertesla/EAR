@@ -6,6 +6,10 @@
     --bg-main: #09090b; /* zinc-950 */
     --text-primary: #fafafa; /* zinc-50 */
     --text-secondary: #a1a1aa; /* zinc-400 */
+    /* Risk level colors */
+    --color-risk-low: #10b981;      /* emerald-500 */
+    --color-risk-medium: #f59e0b;   /* amber-500 */
+    --color-risk-high: #f43f5e;     /* rose-500 */
 }
 
 body {
@@ -44,7 +48,106 @@ body {
     border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Animations */
+/* ==============================
+   Rate Card — Risk-Level Accent
+   ============================== */
+
+.stats-card {
+    transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Accent stripe at the top of the rate card */
+.rate-card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+    transition: background 0.5s ease;
+}
+
+/* Low risk (EAR < 10%) — green */
+.rate-card-low {
+    border-color: rgba(16, 185, 129, 0.25);
+    box-shadow: 0 0 20px -8px rgba(16, 185, 129, 0.1);
+}
+.rate-card-low .rate-card-accent {
+    background: linear-gradient(90deg, var(--color-risk-low), rgba(16, 185, 129, 0.3));
+}
+
+/* Medium risk (10% ≤ EAR < 15%) — amber */
+.rate-card-medium {
+    border-color: rgba(245, 158, 11, 0.25);
+    box-shadow: 0 0 20px -8px rgba(245, 158, 11, 0.1);
+}
+.rate-card-medium .rate-card-accent {
+    background: linear-gradient(90deg, var(--color-risk-medium), rgba(245, 158, 11, 0.3));
+}
+
+/* High risk (EAR ≥ 15%) — rose */
+.rate-card-high {
+    border-color: rgba(244, 63, 94, 0.25);
+    box-shadow: 0 0 20px -8px rgba(244, 63, 94, 0.1);
+}
+.rate-card-high .rate-card-accent {
+    background: linear-gradient(90deg, var(--color-risk-high), rgba(244, 63, 94, 0.3));
+}
+
+/* ==============================
+   Cost Ratio Progress Bar
+   ============================== */
+
+.cost-ratio-bar-wrapper {
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cost-ratio-track {
+    display: flex;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.cost-ratio-segment {
+    height: 100%;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cost-ratio-principal {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.cost-ratio-fee {
+    background: linear-gradient(90deg, var(--color-risk-low), var(--color-risk-medium));
+}
+
+/* Dynamic fee bar color based on risk */
+.rate-card-low ~ .bg-zinc-900 .cost-ratio-fee,
+.cost-ratio-fee-low {
+    background: linear-gradient(90deg, var(--color-risk-low), rgba(16, 185, 129, 0.6));
+}
+
+.cost-ratio-fee-medium {
+    background: linear-gradient(90deg, var(--color-risk-medium), rgba(245, 158, 11, 0.6));
+}
+
+.cost-ratio-fee-high {
+    background: linear-gradient(90deg, var(--color-risk-high), rgba(244, 63, 94, 0.6));
+}
+
+.cost-ratio-fee-dot {
+    background: var(--color-risk-low);
+    transition: background 0.5s ease;
+}
+
+/* ==============================
+   Animations
+   ============================== */
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -74,7 +177,10 @@ body {
     transform: translateY(0);
 }
 
-/* Table refinements */
+/* ==============================
+   Table Refinements
+   ============================== */
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -98,11 +204,4 @@ body {
 
 .data-table tr:hover td {
     background-color: rgba(255, 255, 255, 0.02);
-}
-
-/* Ensure chart container has proper height */
-.chart-container {
-    position: relative;
-    width: 100%;
-    height: 350px;
 }

@@ -14,9 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const buttonText = document.getElementById('button-text');
             const buttonLoader = document.getElementById('button-loader');
 
-            // Chart instances
-            let costAnalysisChart = null;
-
             // Currency Formatter
             const currencyFormatter = new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' });
 
@@ -251,6 +248,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 更新风险等级样式
                 updateRiskLevel(results.ear);
 
+                // 更新成本倍数
+                updateCostMultiplier(results.ear, results.nominalRate);
+
+                // 更新成本占比进度条
+                updateCostRatioBar(results.totalFees, results.totalPayment);
+
                 // 生成建议
                 generateAndDisplayRecommendations(results.ear, results.nominalRate);
 
@@ -259,16 +262,66 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             function updateRiskLevel(ear) {
-                const earCard = document.querySelector('#ear-result').closest('.stats-card');
-                earCard.classList.remove('risk-low', 'risk-medium', 'risk-high');
+                const rateCard = document.getElementById('rate-card');
+                if (!rateCard) return;
+
+                rateCard.classList.remove('rate-card-low', 'rate-card-medium', 'rate-card-high');
 
                 if (ear < 0.10) {
-                    earCard.classList.add('risk-low');
+                    rateCard.classList.add('rate-card-low');
                 } else if (ear < 0.15) {
-                    earCard.classList.add('risk-medium');
+                    rateCard.classList.add('rate-card-medium');
                 } else {
-                    earCard.classList.add('risk-high');
+                    rateCard.classList.add('rate-card-high');
                 }
+
+                // Also update fee bar color
+                const feeBar = document.getElementById('cost-ratio-fee');
+                const feeDot = document.querySelector('.cost-ratio-fee-dot');
+                if (feeBar) {
+                    feeBar.classList.remove('cost-ratio-fee-low', 'cost-ratio-fee-medium', 'cost-ratio-fee-high');
+                    if (ear < 0.10) {
+                        feeBar.classList.add('cost-ratio-fee-low');
+                        if (feeDot) feeDot.style.background = 'var(--color-risk-low)';
+                    } else if (ear < 0.15) {
+                        feeBar.classList.add('cost-ratio-fee-medium');
+                        if (feeDot) feeDot.style.background = 'var(--color-risk-medium)';
+                    } else {
+                        feeBar.classList.add('cost-ratio-fee-high');
+                        if (feeDot) feeDot.style.background = 'var(--color-risk-high)';
+                    }
+                }
+            }
+
+            function updateCostMultiplier(ear, nominalRate) {
+                const el = document.getElementById('cost-multiplier');
+                if (!el || !nominalRate || nominalRate === 0) return;
+                const multiplier = ear / nominalRate;
+                el.textContent = `×${multiplier.toFixed(2)}`;
+
+                // Color the badge based on multiplier magnitude
+                el.classList.remove('text-emerald-400', 'text-amber-400', 'text-rose-400');
+                if (multiplier < 1.5) {
+                    el.classList.add('text-emerald-400');
+                } else if (multiplier < 2.0) {
+                    el.classList.add('text-amber-400');
+                } else {
+                    el.classList.add('text-rose-400');
+                }
+            }
+
+            function updateCostRatioBar(totalFees, totalPayment) {
+                const principalBar = document.getElementById('cost-ratio-principal');
+                const feeBar = document.getElementById('cost-ratio-fee');
+                const label = document.getElementById('cost-ratio-label');
+                if (!principalBar || !feeBar || !label || totalPayment <= 0) return;
+
+                const feeRatio = totalFees / totalPayment;
+                const principalRatio = 1 - feeRatio;
+
+                principalBar.style.width = (principalRatio * 100).toFixed(2) + '%';
+                feeBar.style.width = (feeRatio * 100).toFixed(2) + '%';
+                label.textContent = (feeRatio * 100).toFixed(2) + '%';
             }
 
             function generateAndDisplayRecommendations(ear, nominalRate) {
@@ -514,19 +567,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 animateCurrency(totalFeesEl, 0, results.totalFees, 700);
                 animateCurrency(totalPaymentEl, 0, results.totalPayment, 900);
 
-                // 更新风险等级和建议
+                // 更新风险等级、成本倍数、进度条和建议
                 setTimeout(() => {
                     updateRiskLevel(results.ear);
+                    updateCostMultiplier(results.ear, results.nominalRate);
+                    updateCostRatioBar(results.totalFees, results.totalPayment);
                     generateAndDisplayRecommendations(results.ear, results.nominalRate);
                 }, 500);
 
-                // Prepare data for table and chart
-                const tableData = populateTableAndGetData(results);
-
-                // Draw new chart with animation
-                setTimeout(() => {
-                    drawCostAnalysisChart(tableData.labels, tableData.remainingData, tableData.effectiveRateData);
-                }, 500);
+                // Populate amortization table
+                populateTableAndGetData(results);
 
                 // Show results with staggered animation
                 resultsSection.classList.add('show');
@@ -626,190 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return chartData;
             }
 
-            function drawCostAnalysisChart(labels, remainingData, effectiveRateData) {
-                const ctx = document.getElementById('cost-analysis-chart').getContext('2d');
-                if (costAnalysisChart) costAnalysisChart.destroy();
 
-                // 计算风险线位置
-                const maxRate = Math.max(...effectiveRateData);
-                const dangerLineValue = 0.15; // 15%风险线
-
-                costAnalysisChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                type: 'line',
-                                label: '剩余本金',
-                                data: remainingData,
-                                borderColor: 'rgba(255, 255, 255, 0.8)',
-                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                                yAxisID: 'y-principal',
-                                tension: 0.4,
-                                fill: true,
-                                borderWidth: 2,
-                                pointBackgroundColor: 'rgba(255, 255, 255, 1)',
-                                pointBorderColor: '#18181b',
-                                pointBorderWidth: 2,
-                                pointRadius: 6,
-                                pointHoverRadius: 8,
-                            },
-                            {
-                                type: 'bar',
-                                label: '当期资金成本率',
-                                data: effectiveRateData,
-                                backgroundColor: effectiveRateData.map(rate =>
-                                    rate > 0.15 ? 'rgba(244, 63, 94, 0.8)' : // rose-500
-                                        rate > 0.10 ? 'rgba(245, 158, 11, 0.8)' : // amber-500
-                                            'rgba(16, 185, 129, 0.8)' // emerald-500
-                                ),
-                                borderColor: effectiveRateData.map(rate =>
-                                    rate > 0.15 ? 'rgba(225, 29, 72, 1)' : // rose-600
-                                        rate > 0.10 ? 'rgba(217, 119, 6, 1)' : // amber-600
-                                            'rgba(5, 150, 105, 1)' // emerald-600
-                                ),
-                                borderWidth: 2,
-                                borderRadius: 8,
-                                borderSkipped: false,
-                                yAxisID: 'y-rate',
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20,
-                                    color: 'rgba(255, 255, 255, 0.7)',
-                                    font: {
-                                        size: 12,
-                                        family: 'Inter, sans-serif'
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                titleColor: '#fff',
-                                bodyColor: '#fff',
-                                borderColor: 'rgba(255, 255, 255, 0.2)',
-                                borderWidth: 1,
-                                cornerRadius: 12,
-                                displayColors: true,
-                                callbacks: {
-                                    label: function (context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.dataset.yAxisID === 'y-rate') {
-                                            const rate = context.raw;
-                                            const riskLevel = rate > 0.15 ? '(高风险)' : rate > 0.10 ? '(中风险)' : '(低风险)';
-                                            label += `${(rate * 100).toFixed(2)}% ${riskLevel}`;
-                                        } else {
-                                            label += currencyFormatter.format(context.raw);
-                                        }
-                                        return label;
-                                    },
-                                    afterLabel: function (context) {
-                                        if (context.dataset.yAxisID === 'y-rate') {
-                                            const rate = context.raw;
-                                            if (rate > 0.15) {
-                                                return '建议考虑其他融资方式';
-                                            } else if (rate > 0.10) {
-                                                return '可考虑缩短分期期数';
-                                            }
-                                        }
-                                        return '';
-                                    }
-                                }
-                            }
-                        },
-                        interaction: {
-                            mode: 'index',
-                            intersect: false,
-                        },
-                        scales: {
-                            x: {
-                                display: true,
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.05)',
-                                    lineWidth: 1,
-                                },
-                                ticks: {
-                                    color: 'rgba(255, 255, 255, 0.5)',
-                                    font: {
-                                        family: 'Inter, sans-serif'
-                                    }
-                                }
-                            },
-                            'y-principal': {
-                                type: 'linear',
-                                display: true,
-                                position: 'left',
-                                title: {
-                                    display: true,
-                                    text: '剩余本金 (元)',
-                                    color: 'rgba(255, 255, 255, 0.7)',
-                                    font: {
-                                        size: 11,
-                                        family: 'Inter, sans-serif'
-                                    }
-                                },
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.05)',
-                                    lineWidth: 1,
-                                },
-                                ticks: {
-                                    color: 'rgba(255, 255, 255, 0.5)',
-                                    callback: (value) => currencyFormatter.format(value)
-                                }
-                            },
-                            'y-rate': {
-                                type: 'linear',
-                                display: true,
-                                position: 'right',
-                                title: {
-                                    display: true,
-                                    text: '当期成本率',
-                                    color: 'rgba(255, 255, 255, 0.7)',
-                                    font: {
-                                        size: 11,
-                                        family: 'Inter, sans-serif'
-                                    }
-                                },
-                                grid: {
-                                    drawOnChartArea: false,
-                                    color: 'rgba(255, 255, 255, 0.05)',
-                                },
-                                ticks: {
-                                    color: 'rgba(255, 255, 255, 0.5)',
-                                    callback: (value) => `${(value * 100).toFixed(2)}%`
-                                }
-                            }
-                        },
-                        animation: {
-                            duration: 2000,
-                            easing: 'easeOutCubic'
-                        },
-                        elements: {
-                            point: {
-                                radius: 6,
-                                hoverRadius: 10,
-                                borderWidth: 3
-                            },
-                            bar: {
-                                borderWidth: 2,
-                                borderRadius: 8
-                            }
-                        }
-                    }
-                });
-            }
 
             // 初始计算
             setTimeout(() => {
