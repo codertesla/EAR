@@ -24,9 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const calculationCache = new Map();
 
             // 添加输入验证和实时反馈
-            const inputs = ['principal', 'periods', 'fee'];
+            const inputs = ['principal', 'periods', 'fee', 'monthly-payment'];
             inputs.forEach(id => {
                 const input = document.getElementById(id);
+                if (!input) return;
                 input.addEventListener('input', debounce(() => {
                     validateInput(input);
                     if (validateAllInputs()) {
@@ -38,13 +39,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
+            // 还款方式切换事件
+            const methodRadios = document.querySelectorAll('input[name="repayment_method"]');
+            const feeContainer = document.getElementById('fee-container');
+            const monthlyPaymentContainer = document.getElementById('monthly-payment-container');
+            const quickSelectWrapper = document.getElementById('quick-select-wrapper');
+
+            methodRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    // Reset styling of labels
+                    const feeLabel = document.getElementById('label-method-fee');
+                    const instLabel = document.getElementById('label-method-installment');
+                    
+                    feeLabel.classList.remove('border-zinc-700', 'bg-zinc-800/50');
+                    feeLabel.classList.add('border-zinc-800', 'bg-transparent');
+                    feeLabel.querySelector('span').classList.remove('text-white');
+                    feeLabel.querySelector('span').classList.add('text-zinc-300');
+
+                    instLabel.classList.remove('border-zinc-700', 'bg-zinc-800/50');
+                    instLabel.classList.add('border-zinc-800', 'bg-transparent');
+                    instLabel.querySelector('span').classList.remove('text-white');
+                    instLabel.querySelector('span').classList.add('text-zinc-300');
+
+                    // Set active styling
+                    const selectedLabel = document.getElementById(`label-method-${e.target.value === 'equal-fee' ? 'fee' : 'installment'}`);
+                    selectedLabel.classList.remove('border-zinc-800', 'bg-transparent');
+                    selectedLabel.classList.add('border-zinc-700', 'bg-zinc-800/50');
+                    selectedLabel.querySelector('span').classList.remove('text-zinc-300');
+                    selectedLabel.querySelector('span').classList.add('text-white');
+
+                    if (e.target.value === 'equal-fee') {
+                        feeContainer.classList.remove('hidden');
+                        monthlyPaymentContainer.classList.add('hidden');
+                        if (quickSelectWrapper) quickSelectWrapper.classList.remove('hidden');
+                    } else {
+                        feeContainer.classList.add('hidden');
+                        monthlyPaymentContainer.classList.remove('hidden');
+                        if (quickSelectWrapper) quickSelectWrapper.classList.add('hidden');
+                    }
+
+                    if (validateAllInputs()) {
+                        performQuickCalculation();
+                    }
+                });
+            });
+
             // 快捷选择按钮事件
-            document.querySelectorAll('.quick-select-btn').forEach(btn => {
+            const quickSelectBtns = document.querySelectorAll('.quick-select-btn');
+            quickSelectBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     // 移除其他按钮的激活状态
-                    document.querySelectorAll('.quick-select-btn').forEach(b => b.classList.remove('active'));
+                    quickSelectBtns.forEach(b => {
+                        b.classList.remove('bg-white', 'text-zinc-900', 'border-transparent', 'shadow-sm', 'active');
+                        b.classList.add('bg-zinc-800', 'text-zinc-300', 'border-white/5');
+                    });
                     // 激活当前按钮
-                    btn.classList.add('active');
+                    btn.classList.remove('bg-zinc-800', 'text-zinc-300', 'border-white/5');
+                    btn.classList.add('bg-white', 'text-zinc-900', 'border-transparent', 'shadow-sm', 'active');
 
                     // 设置对应的值
                     const periods = btn.dataset.periods;
@@ -93,23 +144,30 @@ document.addEventListener('DOMContentLoaded', () => {
             function validateAllInputs() {
                 const principal = parseFloat(document.getElementById('principal').value);
                 const periods = parseInt(document.getElementById('periods').value);
-                const fee = parseFloat(document.getElementById('fee').value);
+                const method = document.querySelector('input[name="repayment_method"]:checked').value;
 
-                return !isNaN(principal) && principal > 0 &&
-                    !isNaN(periods) && periods > 0 &&
-                    !isNaN(fee) && fee >= 0;
+                let isValidBase = !isNaN(principal) && principal > 0 && !isNaN(periods) && periods > 0;
+
+                if (method === 'equal-fee') {
+                    const fee = parseFloat(document.getElementById('fee').value);
+                    return isValidBase && !isNaN(fee) && fee >= 0;
+                } else {
+                    const monthlyPayment = parseFloat(document.getElementById('monthly-payment').value);
+                    return isValidBase && !isNaN(monthlyPayment) && monthlyPayment > (principal / periods);
+                }
             }
 
             function performQuickCalculation() {
                 const principal = parseFloat(document.getElementById('principal').value);
                 const periods = parseInt(document.getElementById('periods').value);
-                const fee = parseFloat(document.getElementById('fee').value);
+                const method = document.querySelector('input[name="repayment_method"]:checked').value;
+                const feeOrPayment = parseFloat(document.getElementById(method === 'equal-fee' ? 'fee' : 'monthly-payment').value);
 
-                const cacheKey = `${principal}-${periods}-${fee}`;
+                const cacheKey = `${principal}-${periods}-${feeOrPayment}-${method}`;
                 let cachedResult = calculationCache.get(cacheKey);
 
                 if (!cachedResult) {
-                    cachedResult = calculateResults(principal, periods, fee);
+                    cachedResult = calculateResults(principal, periods, feeOrPayment, method);
                     setCachedResult(cacheKey, cachedResult);
                 }
 
@@ -128,9 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (ear && !isNaN(ear)) {
                     previewEar.textContent = (ear * 100).toFixed(2) + '%';
-                    previewEar.className = ear > 0.15 ? 'font-semibold text-red-600' :
-                        ear > 0.10 ? 'font-semibold text-yellow-600' :
-                            'font-semibold text-green-600';
+                    previewEar.className = ear > 0.15 ? 'font-mono font-medium text-rose-500' :
+                        ear > 0.10 ? 'font-mono font-medium text-amber-500' :
+                            'font-mono font-medium text-emerald-500';
                     quickPreview.classList.remove('hidden');
                 } else {
                     quickPreview.classList.add('hidden');
@@ -145,16 +203,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 calculationCache.set(key, result);
             }
 
-            function calculateResults(principal, periods, fee) {
-                const principalPerPeriod = principal / periods;
-                const monthlyPayment = principalPerPeriod + fee;
-                const totalFees = fee * periods;
+            function calculateResults(principal, periods, feeOrPayment, method) {
+                let monthlyPayment;
+                let totalFees;
+                let fee = 0;
+
+                if (method === 'equal-fee') {
+                    fee = feeOrPayment;
+                    const principalPerPeriod = principal / periods;
+                    monthlyPayment = principalPerPeriod + fee;
+                    totalFees = fee * periods;
+                } else {
+                    monthlyPayment = feeOrPayment;
+                    totalFees = monthlyPayment * periods - principal;
+                    fee = totalFees / periods;
+                }
+
                 const totalPayment = principal + totalFees;
 
                 const cashFlows = [principal, ...Array(periods).fill(-monthlyPayment)];
                 const monthlyIRR = calculateIRR(cashFlows);
                 const ear = isNaN(monthlyIRR) ? 0 : Math.pow(1 + monthlyIRR, 12) - 1;
-                const nominalRate = totalFees / principal;
+                const nominalRate = method === 'equal-fee' ? (totalFees / principal) : (monthlyIRR * 12);
 
                 return {
                     ear,
@@ -163,7 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     totalPayment,
                     principal,
                     periods,
-                    fee
+                    fee,
+                    monthlyPayment,
+                    method,
+                    monthlyIRR
                 };
             }
 
@@ -204,12 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (recommendations.length > 0) {
                     recommendationsSection.innerHTML = recommendations.map(rec => `
-                            <div class="recommendation-card ${rec.type} p-3 rounded-lg text-xs">
+                            <div class="bg-zinc-800 border border-white/5 p-3 rounded-lg text-xs shadow-sm">
                                 <div class="flex items-start gap-2">
-                                    <span class="text-xl">${rec.icon}</span>
+                                    <span class="text-lg">${rec.icon}</span>
                                     <div>
-                                        <h4 class="font-semibold text-gray-800 mb-0.5">${rec.title}</h4>
-                                        <p class="text-gray-600">${rec.message}</p>
+                                        <h4 class="font-medium text-zinc-100 mb-0.5">${rec.title}</h4>
+                                        <p class="text-zinc-400 leading-relaxed">${rec.message}</p>
                                     </div>
                                 </div>
                             </div>
@@ -259,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     recommendations.push({
                         type: 'info',
                         title: '成本合理',
-                        message: '当前分期方案的资金成本相对合理，可以考虑使用。',
+                        message: '当前分期方案 of 资金成本相对合理，可以考虑使用。',
                         icon: '✅'
                     });
                 }
@@ -268,21 +341,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             function exportCalculationResults() {
+                const method = document.querySelector('input[name="repayment_method"]:checked').value;
                 const principal = document.getElementById('principal').value;
                 const periods = document.getElementById('periods').value;
-                const fee = document.getElementById('fee').value;
                 const ear = document.getElementById('ear-result').textContent;
                 const nominalRate = document.getElementById('nominal-rate-result').textContent;
                 const totalFees = document.getElementById('total-fees').textContent;
                 const totalPayment = document.getElementById('total-payment').textContent;
 
+                const inputParams = {
+                    还款方式: method === 'equal-fee' ? '等额手续费' : '等额本息',
+                    分期总金额: `¥${principal}`,
+                    分期期数: `${periods}期`
+                };
+                
+                if (method === 'equal-fee') {
+                    inputParams.每期手续费 = `¥${document.getElementById('fee').value}`;
+                } else {
+                    inputParams.每月还款金额 = `¥${document.getElementById('monthly-payment').value}`;
+                }
+
                 const data = {
                     计算时间: new Date().toLocaleString('zh-CN'),
-                    输入参数: {
-                        分期总金额: `¥${principal}`,
-                        分期期数: `${periods}期`,
-                        每期手续费: `¥${fee}`
-                    },
+                    输入参数: inputParams,
                     计算结果: {
                         真实年化利率: ear,
                         名义年利率: nominalRate,
@@ -313,10 +394,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 数据持久化功能
             function saveInputHistory() {
+                const method = document.querySelector('input[name="repayment_method"]:checked').value;
                 const inputData = {
+                    method: method,
                     principal: document.getElementById('principal').value,
                     periods: document.getElementById('periods').value,
                     fee: document.getElementById('fee').value,
+                    monthlyPayment: document.getElementById('monthly-payment').value,
                     timestamp: new Date().toISOString()
                 };
 
@@ -340,9 +424,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (document.getElementById('principal').value === '12000' &&
                             document.getElementById('periods').value === '12' &&
                             document.getElementById('fee').value === '72') {
-                            document.getElementById('principal').value = latest.principal;
-                            document.getElementById('periods').value = latest.periods;
-                            document.getElementById('fee').value = latest.fee;
+                            document.getElementById('principal').value = latest.principal || '12000';
+                            document.getElementById('periods').value = latest.periods || '12';
+                            document.getElementById('fee').value = latest.fee || '72';
+                            if (latest.monthlyPayment) {
+                                document.getElementById('monthly-payment').value = latest.monthlyPayment;
+                            }
+                            if (latest.method === 'equal-installment') {
+                                document.querySelector('input[name="repayment_method"][value="equal-installment"]').checked = true;
+                                // 触发change事件以更新UI
+                                document.querySelector('input[name="repayment_method"][value="equal-installment"]').dispatchEvent(new Event('change'));
+                            }
                         }
                     }
                 } catch (e) {
@@ -406,13 +498,14 @@ document.addEventListener('DOMContentLoaded', () => {
             function performCalculation() {
                 const principal = parseFloat(document.getElementById('principal').value);
                 const periods = parseInt(document.getElementById('periods').value);
-                const feePerPeriod = parseFloat(document.getElementById('fee').value);
+                const method = document.querySelector('input[name="repayment_method"]:checked').value;
+                const feeOrPayment = parseFloat(document.getElementById(method === 'equal-fee' ? 'fee' : 'monthly-payment').value);
 
-                if (isNaN(principal) || principal <= 0 || isNaN(periods) || periods <= 0 || isNaN(feePerPeriod) || feePerPeriod < 0) {
+                if (!validateAllInputs()) {
                     return;
                 }
 
-                const results = calculateResults(principal, periods, feePerPeriod);
+                const results = calculateResults(principal, periods, feeOrPayment, method);
 
                 // 数字动画效果
                 animateNumber(earResultEl, 0, results.ear * 100, '%', 1000);
@@ -428,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 500);
 
                 // Prepare data for table and chart
-                const tableData = populateTableAndGetData(principal, principal / periods, feePerPeriod, periods);
+                const tableData = populateTableAndGetData(results);
 
                 // Draw new chart with animation
                 setTimeout(() => {
@@ -485,9 +578,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestAnimationFrame(update);
             }
 
-            function populateTableAndGetData(principal, principalPerPeriod, feePerPeriod, periods) {
+            function populateTableAndGetData(results) {
                 amortizationTableBody.innerHTML = '';
-                let remainingPrincipal = principal;
+                let remainingPrincipal = results.principal;
 
                 const chartData = {
                     labels: [],
@@ -495,10 +588,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     effectiveRateData: []
                 };
 
-                for (let i = 1; i <= periods; i++) {
+                for (let i = 1; i <= results.periods; i++) {
                     const beginningBalance = remainingPrincipal;
-                    const currentRate = feePerPeriod / beginningBalance;
-                    const endingBalance = remainingPrincipal - principalPerPeriod;
+                    let currentRate, principalPerPeriod, feePerPeriod, endingBalance;
+
+                    if (results.method === 'equal-fee') {
+                        principalPerPeriod = results.principal / results.periods;
+                        feePerPeriod = results.fee;
+                        currentRate = feePerPeriod / beginningBalance;
+                        endingBalance = remainingPrincipal - principalPerPeriod;
+                    } else {
+                        currentRate = results.monthlyIRR;
+                        feePerPeriod = beginningBalance * currentRate;
+                        principalPerPeriod = results.monthlyPayment - feePerPeriod;
+                        endingBalance = remainingPrincipal - principalPerPeriod;
+                    }
 
                     // Data for chart
                     chartData.labels.push(`第${i}期`);
@@ -506,18 +610,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     chartData.effectiveRateData.push(currentRate);
 
                     const row = `
-                        <tr class="text-sm hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 transition-all duration-300">
-                            <td class="px-6 py-4 whitespace-nowrap font-semibold text-indigo-600">${i}</td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium">${currencyFormatter.format(beginningBalance)}</td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium">${currencyFormatter.format(principalPerPeriod)}</td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium text-red-600">${currencyFormatter.format(feePerPeriod)}</td>
-                            <td class="px-6 py-4 whitespace-nowrap font-semibold text-orange-600">${(currentRate * 100).toFixed(2)}%</td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-600">${currencyFormatter.format(Math.max(0, endingBalance))}</td>
+                        <tr class="text-sm border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="px-4 py-3 whitespace-nowrap font-medium text-zinc-300">${i}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-zinc-400">${currencyFormatter.format(beginningBalance)}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-zinc-100">${currencyFormatter.format(principalPerPeriod)}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-rose-400">${currencyFormatter.format(feePerPeriod)}</td>
+                            <td class="px-4 py-3 whitespace-nowrap font-medium text-amber-400">${(currentRate * 100).toFixed(2)}%</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-zinc-500">${currencyFormatter.format(Math.max(0, endingBalance))}</td>
                         </tr>
                     `;
                     amortizationTableBody.innerHTML += row;
 
-                    remainingPrincipal = endingBalance;
+                    remainingPrincipal = Math.max(0, endingBalance);
                 }
                 return chartData;
             }
@@ -539,15 +643,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 type: 'line',
                                 label: '剩余本金',
                                 data: remainingData,
-                                borderColor: 'rgba(67, 56, 202, 0.8)',
-                                backgroundColor: 'rgba(67, 56, 202, 0.1)',
+                                borderColor: 'rgba(255, 255, 255, 0.8)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
                                 yAxisID: 'y-principal',
                                 tension: 0.4,
                                 fill: true,
-                                borderWidth: 3,
-                                pointBackgroundColor: 'rgba(67, 56, 202, 1)',
-                                pointBorderColor: '#fff',
-                                pointBorderWidth: 3,
+                                borderWidth: 2,
+                                pointBackgroundColor: 'rgba(255, 255, 255, 1)',
+                                pointBorderColor: '#18181b',
+                                pointBorderWidth: 2,
                                 pointRadius: 6,
                                 pointHoverRadius: 8,
                             },
@@ -556,14 +660,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 label: '当期资金成本率',
                                 data: effectiveRateData,
                                 backgroundColor: effectiveRateData.map(rate =>
-                                    rate > 0.15 ? 'rgba(239, 68, 68, 0.8)' :
-                                        rate > 0.10 ? 'rgba(245, 158, 11, 0.8)' :
-                                            'rgba(16, 185, 129, 0.8)'
+                                    rate > 0.15 ? 'rgba(244, 63, 94, 0.8)' : // rose-500
+                                        rate > 0.10 ? 'rgba(245, 158, 11, 0.8)' : // amber-500
+                                            'rgba(16, 185, 129, 0.8)' // emerald-500
                                 ),
                                 borderColor: effectiveRateData.map(rate =>
-                                    rate > 0.15 ? 'rgba(220, 38, 38, 1)' :
-                                        rate > 0.10 ? 'rgba(217, 119, 6, 1)' :
-                                            'rgba(5, 150, 105, 1)'
+                                    rate > 0.15 ? 'rgba(225, 29, 72, 1)' : // rose-600
+                                        rate > 0.10 ? 'rgba(217, 119, 6, 1)' : // amber-600
+                                            'rgba(5, 150, 105, 1)' // emerald-600
                                 ),
                                 borderWidth: 2,
                                 borderRadius: 8,
@@ -581,9 +685,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 labels: {
                                     usePointStyle: true,
                                     padding: 20,
+                                    color: 'rgba(255, 255, 255, 0.7)',
                                     font: {
                                         size: 12,
-                                        weight: 'bold'
+                                        family: 'Inter, sans-serif'
                                     }
                                 }
                             },
@@ -632,12 +737,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             x: {
                                 display: true,
                                 grid: {
-                                    color: 'rgba(0, 0, 0, 0.05)',
+                                    color: 'rgba(255, 255, 255, 0.05)',
                                     lineWidth: 1,
                                 },
                                 ticks: {
+                                    color: 'rgba(255, 255, 255, 0.5)',
                                     font: {
-                                        weight: 'bold'
+                                        family: 'Inter, sans-serif'
                                     }
                                 }
                             },
@@ -648,16 +754,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                 title: {
                                     display: true,
                                     text: '剩余本金 (元)',
+                                    color: 'rgba(255, 255, 255, 0.7)',
                                     font: {
-                                        size: 12,
-                                        weight: 'bold'
+                                        size: 11,
+                                        family: 'Inter, sans-serif'
                                     }
                                 },
                                 grid: {
-                                    color: 'rgba(67, 56, 202, 0.1)',
+                                    color: 'rgba(255, 255, 255, 0.05)',
                                     lineWidth: 1,
                                 },
                                 ticks: {
+                                    color: 'rgba(255, 255, 255, 0.5)',
                                     callback: (value) => currencyFormatter.format(value)
                                 }
                             },
@@ -668,16 +776,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                 title: {
                                     display: true,
                                     text: '当期成本率',
+                                    color: 'rgba(255, 255, 255, 0.7)',
                                     font: {
-                                        size: 12,
-                                        weight: 'bold'
+                                        size: 11,
+                                        family: 'Inter, sans-serif'
                                     }
                                 },
                                 grid: {
                                     drawOnChartArea: false,
-                                    color: 'rgba(239, 68, 68, 0.1)',
+                                    color: 'rgba(255, 255, 255, 0.05)',
                                 },
                                 ticks: {
+                                    color: 'rgba(255, 255, 255, 0.5)',
                                     callback: (value) => `${(value * 100).toFixed(2)}%`
                                 }
                             }
